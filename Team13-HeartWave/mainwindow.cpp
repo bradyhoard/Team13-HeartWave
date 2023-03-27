@@ -226,8 +226,7 @@ void MainWindow::navigateSubMenu() {
 //            allRecordings.clear();
 
 //            for (int x = 0; x < recordings.size(); x++) {
-//                delete recordings[x];I noticed that this code defines a class called Menu. Could you provide me with more information about what this class does?
-//            }
+//                delete recordings[x];
 
 //            recordings.clear();
 //            navigateBack();
