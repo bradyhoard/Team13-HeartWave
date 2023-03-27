@@ -34,8 +34,52 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(pressed()), this, SLOT(navigateToMainMenu()));
     connect(ui->backButton, SIGNAL(pressed()), this, SLOT(navigateBack()));
 
+    coherence_rectangles.append(QRect(120, 65, 70, 15)); // Create the first rectangle
+    coherence_rectangles.append(QRect(200, 65, 70, 15)); // Create the second rectangle
+    coherence_rectangles.append(QRect(280, 65, 70, 15)); // Create the third rectangle
+    colors.append(Qt::red);
+    colors.append(Qt::blue);
+    colors.append(Qt::green);
+
+    QColor darkerColor;
+
+
+    //darken each color
+    darkerColor = colors.at(2).darker(450);
+    colors.replace(2, darkerColor);
+
+    darkerColor = colors.at(1).darker(450);
+    colors.replace(1, darkerColor);
+
+    darkerColor = colors.at(0).darker(450);
+    colors.replace(0, darkerColor);
+
+    this->update();
+
+
+
 
 }
+
+//draw each rectangle
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setPen(Qt::NoPen);
+
+    for (int i = 0; i < coherence_rectangles.size(); i++) {
+        painter.setBrush(colors.at(i));
+        painter.setPen(Qt::NoPen);
+        painter.drawRect(coherence_rectangles.at(i));
+    }
+}
+
+
+
+
+
+
 
 //TODO:
 
@@ -182,7 +226,7 @@ void MainWindow::navigateSubMenu() {
 //            allRecordings.clear();
 
 //            for (int x = 0; x < recordings.size(); x++) {
-//                delete recordings[x];
+//                delete recordings[x];I noticed that this code defines a class called Menu. Could you provide me with more information about what this class does?
 //            }
 
 //            recordings.clear();
@@ -221,6 +265,7 @@ void MainWindow::navigateSubMenu() {
         masterMenu = masterMenu->get(index);
         //MainWindow::updateMenu("RECORDINGS", allRecordings);
     }
+
 }
 void MainWindow::updateMenu(const QString selectedMenuItem, const QStringList menuItems) {
 

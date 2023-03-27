@@ -9,6 +9,7 @@
 #include <QStatusBar>
 #include <QVector>
 #include <QtGlobal>
+#include <QPainter>
 
 #include "menu.h"
 
@@ -23,6 +24,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+protected:
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     Menu* masterMenu;
@@ -33,6 +36,10 @@ private:
     QListWidget *activeQListWidget;
     bool powerStatus;
     double batteryLvl;
+
+    //rectangles for the coherence level and list of colors
+    QList<QRect> coherence_rectangles;
+    QList<QColor> colors;
 
 
     void updateMenu(const QString, const QStringList);
@@ -46,6 +53,9 @@ private slots:
     void navigateSubMenu();
     void navigateToMainMenu();
     void navigateBack();
+
+
+
 
 
 
