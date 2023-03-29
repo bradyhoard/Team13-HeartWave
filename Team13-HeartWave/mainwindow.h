@@ -12,6 +12,7 @@
 #include <QPainter>
 
 #include "menu.h"
+#include "device.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -53,6 +54,7 @@ private slots:
     void navigateSubMenu();
     void navigateToMainMenu();
     void navigateBack();
+    void lowerBattery(Device*);
 
 
 

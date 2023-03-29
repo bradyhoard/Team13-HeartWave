@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "device.h"
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     //create menu tree
     masterMenu = new Menu("MAIN MENU", {"START NEW SESSION","SETTINGS","HISTORY"}, nullptr);
     mainMenuOG = masterMenu;
+    Device *device = new Device(100);
+
     initializeMainMenu(masterMenu);
 
     // Initialize the main menu view
@@ -24,7 +28,28 @@ MainWindow::MainWindow(QWidget *parent)
     changePowerStatus();
     connect(ui->powerButton, SIGNAL(pressed()), this, SLOT(powerChange()));
 
-    //TODO: BATTERY
+    //BATTERY
+
+    ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
+
+    ui->batteryProgress->setValue(device->getBatteryLevel());
+
+    connect(ui->chargeDevice, &QPushButton::clicked, this, [=]() {
+            device->setFullCharge();
+            ui->batteryProgress->setValue(device->getBatteryLevel());
+        });
+
+    QTimer* timer;
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [=]() {
+        if (powerStatus && device->getBatteryLevel() > 0){
+        lowerBattery(device);
+        }
+    });
+
+    // every 5 seconds the function above will be called
+    timer->start(5000);
+
 
     //TODO: RIGHT & LEFT BUTTONS
     // device interface button connections
@@ -75,6 +100,31 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 }
 
+void MainWindow::lowerBattery(Device *d)
+{
+    d->setBatteryLevel(d->getBatteryLevel() -1);
+
+    if(d->getBatteryLevel() <= 100 && d->getBatteryLevel() >=50 ){
+        ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
+    }
+
+    else if(d->getBatteryLevel() <= 49 && d->getBatteryLevel() >= 20 ){
+        ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #C3DC23; }");
+    }
+
+    else if(d->getBatteryLevel() <= 19 && d->getBatteryLevel() >= 1 ){
+        ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #EB1419; }");
+    }
+
+    //turn the device off and recharge the battery to full
+    else{
+
+        powerChange();
+        d->setFullCharge();
+    }
+    ui->batteryProgress->setValue(d->getBatteryLevel());
+
+}
 
 
 
@@ -127,6 +177,8 @@ void MainWindow::powerChange(){
 void MainWindow::changePowerStatus() {
     activeQListWidget->setVisible(powerStatus);
     ui->menuLabel->setVisible(powerStatus);
+    ui->batteryProgress->setVisible(powerStatus);
+    ui->chargeDevice->setVisible(powerStatus);
 //    ui->statusBarQFrame->setVisible(powerStatus);
 //    ui->treatmentView->setVisible(powerStatus);
 //    ui->frequencyLabel->setVisible(powerStatus);
