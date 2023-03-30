@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "device.h"
-#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
     currentTimerCount = 0;
     graphTimer = new QTimer(this);
     connect(graphTimer, &QTimer::timeout, this, &MainWindow::updateGraph);
-    //when get to appropriate menu need to start & stop the timer/ also stop timer when leave menu.
-    graphTimer->start(2000);
 
     //create menu tree
     masterMenu = new Menu("MAIN MENU", {"START NEW SESSION","SETTINGS","HISTORY"}, nullptr);
@@ -31,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Account for device being "off" on sim start
     powerStatus = false;
+    //hide new session menu
+    ui->customPlot->setVisible(powerStatus);
+    ui->parametersViewWidget->setVisible(powerStatus);
+    ui->ballPacerPlaceHold->setVisible(powerStatus);
     changePowerStatus();
     connect(ui->powerButton, SIGNAL(pressed()), this, SLOT(powerChange()));
 
@@ -63,6 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->okButton, SIGNAL(pressed()), this, SLOT(navigateSubMenu()));
     connect(ui->menuButton, SIGNAL(pressed()), this, SLOT(navigateToMainMenu()));
     connect(ui->backButton, SIGNAL(pressed()), this, SLOT(navigateBack()));
+    //TODO: set up the apply to heart combo box
+
+
 
     //SET UP COLOR LIGHTS
     coherence_rectangles.append(QRect(120, 65, 70, 15)); // Create the first rectangle
@@ -110,21 +114,52 @@ MainWindow::MainWindow(QWidget *parent)
     this->update();
 }
 
+//TODO:
+
+
+//LEFT & RIGHT button initialiation
+//LEFT & RIGHT button control
+
+//Proper SubMenu Navigation in navigateSubMenu() for SESSION, SETTINGS & HISTORY
+//SESSION score types displayed (coherence, level, achievement)
+//HR Contact icon
+
+//GRAPH display and update (graph module)
+
+//LEDs behaviour (green, blue, red)
+
+//SETTINGS implementation (change level, difficulty, reset device)
+
+//HISTORY LOG Implemenation (view sessions, delete history)
+
+//COHERENCE LEVEL SOUND module
+
+
+
+MainWindow::~MainWindow()
+{
+    delete mainMenuOG;
+    delete batteryTimer;
+    delete graphTimer;
+    delete device;
+    delete ui;
+}
+
 //Apply the device to user to measure his stuff
 void MainWindow::applyToSkin(bool checked) {
 
     ui->heartPicLabel->setPixmap(QPixmap(checked ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
-//    ui->applyToSkinAdminBox->setCurrentIndex(checked ? 1 : 0);
-//    onSkin = checked;
+    ui->applyToHeartBox->setCurrentIndex(checked ? 1 : 0);
+    onSkin = checked;
 
-//    if (currentTimerCount != -1) {
+    if (currentTimerCount != -1) {
 //        if (!onSkin) {
-//            currentTherapy->getTimer()->stop();
+//            currentSession->getTimer()->stop();
 //        }
 //        else {
-//            currentTherapy->getTimer()->start(1000);
+//            currentSession->getTimer()->start(1000);
 //        }
-//    }
+    }
 }
 
 
@@ -146,7 +181,22 @@ void MainWindow::updateGraph(){
     //draw out graph again to refelect new data
     ui->customPlot->replot();
 }
-
+//extract the graph content into a given session in the params
+//will be super akward cuz qCustomPlot only allows const stuff to go in-out....
+void MainWindow::extractGraph(){
+    //type data() returns is weird so we can cheat with auto lol
+//    auto plotData = ui->customPlot->graph(0)->data();
+//    QVector<double> xVals = new QVector();
+//    QVector<double> yVals = new QVector();
+//    for (int i = 0 ; i < plotData->size() ; ++i) {
+//         double lastKey = plotData->at(i)->key;
+//         double lastValue = plotData->at(i)->value;
+//         qDebug () << "X:" << i << lastKey;
+//         qDebug () << "Y:" << i << lastValue;
+//        xVals.append(lastKey);
+//        yVals.append(lastValue);
+//    }
+}
 
 //draw each rectangle
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -188,41 +238,6 @@ void MainWindow::lowerBattery(Device *d)
 
 }
 
-
-
-
-
-
-//TODO:
-
-
-//LEFT & RIGHT button initialiation
-//LEFT & RIGHT button control
-
-//Proper SubMenu Navigation in navigateSubMenu() for SESSION, SETTINGS & HISTORY
-//SESSION score types displayed (coherence, level, achievement)
-//HR Contact icon
-
-//GRAPH display and update (graph module)
-
-//LEDs behaviour (green, blue, red)
-
-//SETTINGS implementation (change level, difficulty, reset device)
-
-//HISTORY LOG Implemenation (view sessions, delete history)
-
-//COHERENCE LEVEL SOUND module
-
-
-
-MainWindow::~MainWindow()
-{
-    delete mainMenuOG;
-    delete batteryTimer;
-    delete graphTimer;
-    delete ui;
-}
-
 void MainWindow::powerChange(){
     //inverse power status and update UI based of that.
     if(powerStatus){
@@ -256,9 +271,10 @@ void MainWindow::changePowerStatus() {
     ui->rightButton->setEnabled(powerStatus);
     ui->menuButton->setEnabled(powerStatus);
     ui->okButton->setEnabled(powerStatus);
-    ui->backButton->setEnabled(powerStatus);
-   // ui->applyToSkinButton->setEnabled(powerStatus);
+    ui->backButton->setEnabled(powerStatus);  
+    ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
+
 }
 
 void MainWindow::initializeMainMenu(Menu* m) {
@@ -271,7 +287,7 @@ void MainWindow::initializeMainMenu(Menu* m) {
 //    }
 
 
-    Menu* session = new Menu("SESSION", {}, m);
+    Menu* session = new Menu("START NEW SESSION", {}, m);
     Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE","BREATH PACER"}, m);
     Menu* history = new Menu("HISTORY", {"VIEW"}, m);
 
@@ -351,6 +367,7 @@ void MainWindow::navigateSubMenu() {
 //            return;
 //        }
 //    }
+
     //Logic for when the menu is the settings challenge menu
     if(masterMenu->getName() == "CHALLENGE LEVEL"){
         device->setChallengeLevel(index+1);
@@ -370,34 +387,24 @@ void MainWindow::navigateSubMenu() {
         }
     }
 
-    //TODO: Logic for when the menu is the settings breath pacer menu
+    //TODO: Logic for when the menu is the settings breath pacer menu (arrow keys and stuff)
 
 
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
         masterMenu = masterMenu->get(index);
         MainWindow::updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
-
-
     }
-    //If the menu is not a parent and clicking on it should start a therapy
-    else if (masterMenu->get(index)->getMenuItems().length() == 0 && masterMenu->getName() == "SESSION") {
-        if (masterMenu->getName() == "SESSION") {
-            //Update new menu info
-            masterMenu = masterMenu->get(index);
-            //MainWindow::updateMenu(programs[index]->getName(), {});
-            //MainWindow::beginTherapy(programs[index]);
-        }
-//        else if (masterMenu->getName() == "FREQUENCIES") {
-//            masterMenu = masterMenu->get(index);
-//            MainWindow::updateMenu(frequencies[index]->getName(), {});
-//            MainWindow::beginTherapy(frequencies[index]);
-//        }
+    //If the menu is has no items in it i.e it should start a session
+    else if (masterMenu->get(index)->getMenuItems().length() == 0) {
+        // && masterMenu->getName() == "START NEW SESSION"
+        //TODO: Start a new session with params
+        beginSession();
     }
     //If the button pressed should display the device's recordings.
     else if (masterMenu->get(index)->getName() == "VIEW") {
         masterMenu = masterMenu->get(index);
-        //MainWindow::updateMenu("RECORDINGS", allRecordings);
+        //MainWindow::updateMenu("RECORDINGS", allRecordings); <-- TODO: display recording modify
     }
 
 }
@@ -409,8 +416,16 @@ void MainWindow::updateMenu(const QString selectedMenuItem, const QStringList me
     ui->menuLabel->setText(selectedMenuItem);
 }
 
+void MainWindow::beginSession(){
+    graphTimer->start(2000);
+    ui->customPlot->setVisible(true);
+    ui->parametersViewWidget->setVisible(true);
+    ui->ballPacerPlaceHold->setVisible(true);
+
+}
 
 void MainWindow::navigateToMainMenu() {
+//TODO: Update for what happens when exiting during a session
 //    if (currentTimerCount != -1) {
 //        //Save recording
 //        if (masterMenu->getParent()->getName() == "PROGRAMS") {
@@ -444,7 +459,7 @@ void MainWindow::navigateToMainMenu() {
 
 
 void MainWindow::navigateBack() {
-
+//TODO: Update for what happens when exiting during a session
     ui->rightButton->blockSignals(true);
     ui->leftButton->blockSignals(true);
 

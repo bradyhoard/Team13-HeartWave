@@ -1,7 +1,7 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 #include <QVector>
-//#include "Session.h"
+#include "Session.h"
 
 
 
@@ -34,8 +34,7 @@ public:
 
 private:
     int m_batteryLevel;
-//    QVector<Session> sessions; //History of device
-
+    //QVector<Session*> sessions; //History of device pointers to all user sessions
     //Device settings
     int challengeLevel;
     int breathTimeInterval;

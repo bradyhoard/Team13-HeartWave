@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>890</width>
-    <height>740</height>
+    <width>859</width>
+    <height>790</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,15 +20,15 @@
       <x>60</x>
       <y>130</y>
       <width>341</width>
-      <height>271</height>
+      <height>361</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="upButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>410</y>
+      <x>190</x>
+      <y>510</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -63,8 +63,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="downButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>530</y>
+      <x>190</x>
+      <y>630</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -99,8 +99,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="leftButton">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>470</y>
+      <x>260</x>
+      <y>570</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -135,8 +135,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="rightButton">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>470</y>
+      <x>120</x>
+      <y>570</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -171,8 +171,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="backButton">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>410</y>
+      <x>120</x>
+      <y>510</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -207,8 +207,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="menuButton">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>410</y>
+      <x>260</x>
+      <y>510</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -243,8 +243,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="okButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>470</y>
+      <x>190</x>
+      <y>570</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -279,8 +279,8 @@ QPushButton:pressed {
    <widget class="QPushButton" name="powerButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>590</y>
+      <x>190</x>
+      <y>690</y>
       <width>40</width>
       <height>40</height>
      </rect>
@@ -316,9 +316,9 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>110</y>
+      <y>80</y>
       <width>341</width>
-      <height>291</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -395,21 +395,21 @@ QPushButton:pressed {
    <widget class="QCustomPlot" name="customPlot" native="true">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>60</x>
       <y>210</y>
       <width>341</width>
-      <height>181</height>
+      <height>221</height>
      </rect>
     </property>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="menuFrame">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>60</y>
+      <x>60</x>
+      <y>80</y>
       <width>341</width>
       <height>31</height>
      </rect>
@@ -456,6 +456,204 @@ QPushButton:pressed {
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="parametersViewWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>130</y>
+      <width>341</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(52, 101, 164);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Coherence</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>10</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Length</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>10</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Achievment</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="coherenceLabel">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>40</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lengthLabel">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>40</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="achievmentLabel">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>40</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="applyToHeartBox">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>570</y>
+      <width>91</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>570</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Apply to Heart</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="ballPacerPlaceHold" native="true">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>430</y>
+      <width>341</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(52, 101, 164);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>10</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>BALL PACER PLACE HOLDER</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
    <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
@@ -469,14 +667,18 @@ QPushButton:pressed {
    <zorder>chargeDevice</zorder>
    <zorder>batteryProgress</zorder>
    <zorder>customPlot</zorder>
-   <zorder>frame</zorder>
+   <zorder>menuFrame</zorder>
+   <zorder>parametersViewWidget</zorder>
+   <zorder>applyToHeartBox</zorder>
+   <zorder>label_4</zorder>
+   <zorder>ballPacerPlaceHold</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>890</width>
+     <width>859</width>
      <height>22</height>
     </rect>
    </property>

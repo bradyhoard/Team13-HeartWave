@@ -13,6 +13,7 @@
 #include<ctime>
 #include "menu.h"
 #include "device.h"
+#include "Session.h"
 
 
 /*
@@ -45,6 +46,9 @@ private:
     Ui::MainWindow *ui;
 
     Device *device; //User device
+    Session *currentSession; //current recorded session to the device
+
+    bool onSkin;//might not need came from DENAS
 
     QListWidget *activeQListWidget;
     bool powerStatus;
@@ -70,7 +74,8 @@ private:
     void generateData(); //will use for now to simulate data being "captured" by the device from user
     void updateGraph(); //update a graph x ticks of time
     void applyToSkin(bool checked);
-
+    void extractGraph();
+    void beginSession();
 private slots:
     void powerChange();
     void navigateDownMenu();
