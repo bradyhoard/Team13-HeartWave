@@ -44,6 +44,8 @@ private:
 
     Ui::MainWindow *ui;
 
+    Device *device; //User device
+
     QListWidget *activeQListWidget;
     bool powerStatus;
 
@@ -62,13 +64,12 @@ private:
     const int LOW_X = 0;
     const int HIGH_X = 200;
 
-
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
     void changePowerStatus();
     void generateData(); //will use for now to simulate data being "captured" by the device from user
     void updateGraph(); //update a graph x ticks of time
-
+    void applyToSkin(bool checked);
 
 private slots:
     void powerChange();

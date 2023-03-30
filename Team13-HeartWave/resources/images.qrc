@@ -9,5 +9,7 @@
         <file>buttons/powerButton.svg</file>
         <file>buttons/rightButton.svg</file>
         <file>buttons/upButton.svg</file>
+        <file>buttons/heart-OFF.svg</file>
+        <file>buttons/heart-ON.svg</file>
     </qresource>
 </RCC>

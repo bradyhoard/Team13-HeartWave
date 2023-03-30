@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     //create menu tree
     masterMenu = new Menu("MAIN MENU", {"START NEW SESSION","SETTINGS","HISTORY"}, nullptr);
     mainMenuOG = masterMenu;
-    Device *device = new Device(100);
+    device = new Device(100);
 
     initializeMainMenu(masterMenu);
 
@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     changePowerStatus();
     connect(ui->powerButton, SIGNAL(pressed()), this, SLOT(powerChange()));
 
-    //BATTERY
+    //SET UP BATTERY
 
     ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
 
@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->menuButton, SIGNAL(pressed()), this, SLOT(navigateToMainMenu()));
     connect(ui->backButton, SIGNAL(pressed()), this, SLOT(navigateBack()));
 
+    //SET UP COLOR LIGHTS
     coherence_rectangles.append(QRect(120, 65, 70, 15)); // Create the first rectangle
     coherence_rectangles.append(QRect(200, 65, 70, 15)); // Create the second rectangle
     coherence_rectangles.append(QRect(280, 65, 70, 15)); // Create the third rectangle
@@ -85,13 +86,15 @@ MainWindow::MainWindow(QWidget *parent)
     colors.replace(0, darkerColor);
 
 
-
+    //SET UP GRAPH
     // add new graph and set their look:
     ui->customPlot->addGraph();
     ui->customPlot->graph(0)->setPen(QPen(Qt::blue)); // line color blue for first graph
+
     //set text on y&x axis
     ui->customPlot->yAxis->setLabel("Heart Rate");
     ui->customPlot->xAxis->setLabel("Time (seconds)");
+
     // make left and bottom axes always transfer their ranges to right and top axes:
     connect(ui->customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->xAxis2, SLOT(setRange(QCPRange)));
     connect(ui->customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->yAxis2, SLOT(setRange(QCPRange)));
@@ -99,20 +102,39 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->graph(0)->rescaleAxes();
     // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select graphs by clicking:
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-    //set ranges on x & y axis
 
+    //set ranges on x & y axis
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
-    this->update();
 
+    this->update();
 }
+
+//Apply the device to user to measure his stuff
+void MainWindow::applyToSkin(bool checked) {
+
+    ui->heartPicLabel->setPixmap(QPixmap(checked ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
+//    ui->applyToSkinAdminBox->setCurrentIndex(checked ? 1 : 0);
+//    onSkin = checked;
+
+//    if (currentTimerCount != -1) {
+//        if (!onSkin) {
+//            currentTherapy->getTimer()->stop();
+//        }
+//        else {
+//            currentTherapy->getTimer()->start(1000);
+//        }
+//    }
+}
+
+
 
 void MainWindow::generateData(){
     //generate number between 40-100 put it on y
     srand (time(NULL));
-    int temp = rand()%61+40;
+    int temp = rand()%61+40;                //needs to be double
     ui->customPlot->graph(0)->addData(currentTimerCount,(double)temp);
-    if(currentTimerCount > 50){
+    if(currentTimerCount > 200){
         graphTimer->stop(); //end session primarly for testing will move over to a diff spot later
     }
     currentTimerCount+= 2;//timer is every 2 seconds so plot every 2
@@ -173,7 +195,6 @@ void MainWindow::lowerBattery(Device *d)
 
 //TODO:
 
-//Batter level control
 
 //LEFT & RIGHT button initialiation
 //LEFT & RIGHT button control
@@ -236,42 +257,42 @@ void MainWindow::changePowerStatus() {
     ui->menuButton->setEnabled(powerStatus);
     ui->okButton->setEnabled(powerStatus);
     ui->backButton->setEnabled(powerStatus);
-//    ui->applyToSkinButton->setEnabled(powerStatus);
-//    ui->applyToSkinAdminBox->setEnabled(powerStatus);
+   // ui->applyToSkinButton->setEnabled(powerStatus);
+    ui->heartPicLabel->setEnabled(powerStatus);
 }
 
 void MainWindow::initializeMainMenu(Menu* m) {
 
-//    QStringList frequenciesList;
 //    QStringList programsList;
 
-//    for (Therapy* f : this->frequencies) {
-//        frequenciesList.append(f->getName());
-//    }
+
 //    for (Therapy* p : this->programs) {
 //        programsList.append(p->getName());
 //    }
 
+
     Menu* session = new Menu("SESSION", {}, m);
-    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","BREATH PACER"}, m);
-    Menu* history = new Menu("HISTORY", {"VIEW","CLEAR"}, m);
+    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE","BREATH PACER"}, m);
+    Menu* history = new Menu("HISTORY", {"VIEW"}, m);
 
     m->addChildMenu(session);
     m->addChildMenu(settings);
     m->addChildMenu(history);
 
-//    for (Therapy* f : this->frequencies) {
-//        frequencies->addChildMenu(new Menu(f->getName(), {}, frequencies));
-//    }
 
 //    for (Therapy* p : this->programs) {
 //        programs->addChildMenu(new Menu(p->getName(), {}, programs));
 //    }
 
     Menu* viewHistory = new Menu("VIEW",{}, history);
-    Menu* clearHistory = new Menu("CLEAR", {"YES","NO"}, history);
+    Menu* clearDevice = new Menu("RESET DEVICE", {"YES","NO"}, settings);
+    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"1","2","3","4"},settings);
+
+
     history->addChildMenu(viewHistory);
-    history->addChildMenu(clearHistory);
+    settings->addChildMenu(challengeLvls);
+    settings->addChildMenu(clearDevice);
+     //TODO: Breath Pacer child menu selector that is controlled with the side arrows
 }
 
 
@@ -309,7 +330,10 @@ void MainWindow::navigateSubMenu() {
         return;
     }
 
-//    //Logic for when the menu is the delete menu.
+
+
+
+      //Logic for when the menu is the delete menu.
 //    if (masterMenu->getName() == "CLEAR") {
 //        if (masterMenu->getMenuItems()[index] == "YES") {
 //            db->deleteRecords();
@@ -327,6 +351,27 @@ void MainWindow::navigateSubMenu() {
 //            return;
 //        }
 //    }
+    //Logic for when the menu is the settings challenge menu
+    if(masterMenu->getName() == "CHALLENGE LEVEL"){
+        device->setChallengeLevel(index+1);
+        navigateBack();
+        return;
+    }
+    //Logic for when reset device settings menu option is selected
+    if(masterMenu->getName() == "RESET DEVICE"){
+        if (masterMenu->getMenuItems()[index] == "YES") {
+              device->resetSettings();
+              navigateBack();
+              return;
+         }
+        else{
+            navigateBack();
+            return;
+        }
+    }
+
+    //TODO: Logic for when the menu is the settings breath pacer menu
+
 
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
