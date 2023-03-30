@@ -10,9 +10,19 @@
 #include <QVector>
 #include <QtGlobal>
 #include <QPainter>
-
+#include<ctime>
 #include "menu.h"
 #include "device.h"
+
+
+/*
+        ----IMPORTANT BEFORE BUILDING-----
+
+        1. Make sure to run the command: sudo apt-get install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev
+        and see that the libraries are up to date or the graph feature will simply not work.
+
+        2. Building the project takes around 1 minute on my VM due to the graph files size so give it some time.
+*/
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,16 +46,29 @@ private:
 
     QListWidget *activeQListWidget;
     bool powerStatus;
-    double batteryLvl;
 
     //rectangles for the coherence level and list of colors
     QList<QRect> coherence_rectangles;
     QList<QColor> colors;
 
 
+    QTimer* batteryTimer;
+
+    //graph variables
+    QTimer *graphTimer; //procedure timer
+    double currentTimerCount;
+    const int LOW_Y = 38;
+    const int HIGH_Y = 110;
+    const int LOW_X = 0;
+    const int HIGH_X = 200;
+
+
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
     void changePowerStatus();
+    void generateData(); //will use for now to simulate data being "captured" by the device from user
+    void updateGraph(); //update a graph x ticks of time
+
 
 private slots:
     void powerChange();
@@ -54,7 +77,7 @@ private slots:
     void navigateSubMenu();
     void navigateToMainMenu();
     void navigateBack();
-    void lowerBattery(Device*);
+    void lowerBattery(Device*); //update the battery display on the screen based on the device battey status
 
 
 

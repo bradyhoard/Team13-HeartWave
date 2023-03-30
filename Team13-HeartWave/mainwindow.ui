@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>483</width>
+    <width>890</width>
     <height>647</height>
    </rect>
   </property>
@@ -408,6 +408,16 @@ QPushButton:pressed {
      <number>24</number>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="customPlot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>140</y>
+      <width>341</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
@@ -421,19 +431,34 @@ QPushButton:pressed {
    <zorder>powerButton</zorder>
    <zorder>chargeDevice</zorder>
    <zorder>batteryProgress</zorder>
+   <zorder>customPlot</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>483</width>
+     <width>890</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuHW_Device">
+    <property name="title">
+     <string>HW Device</string>
+    </property>
+   </widget>
+   <addaction name="menuHW_Device"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -9,6 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //make the graph timer
+    currentTimerCount = 0;
+    graphTimer = new QTimer(this);
+    connect(graphTimer, &QTimer::timeout, this, &MainWindow::updateGraph);
+    //when get to appropriate menu need to start & stop the timer/ also stop timer when leave menu.
+    graphTimer->start(2000);
 
     //create menu tree
     masterMenu = new Menu("MAIN MENU", {"START NEW SESSION","SETTINGS","HISTORY"}, nullptr);
@@ -39,16 +45,15 @@ MainWindow::MainWindow(QWidget *parent)
             ui->batteryProgress->setValue(device->getBatteryLevel());
         });
 
-    QTimer* timer;
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [=]() {
+    batteryTimer = new QTimer(this);
+    connect(batteryTimer, &QTimer::timeout, this, [=]() {
         if (powerStatus && device->getBatteryLevel() > 0){
         lowerBattery(device);
         }
     });
 
     // every 5 seconds the function above will be called
-    timer->start(5000);
+    batteryTimer->start(5000);
 
 
     //TODO: RIGHT & LEFT BUTTONS
@@ -79,12 +84,47 @@ MainWindow::MainWindow(QWidget *parent)
     darkerColor = colors.at(0).darker(450);
     colors.replace(0, darkerColor);
 
+
+
+    // add new graph and set their look:
+    ui->customPlot->addGraph();
+    ui->customPlot->graph(0)->setPen(QPen(Qt::blue)); // line color blue for first graph
+    //set text on y&x axis
+    ui->customPlot->yAxis->setLabel("Heart Rate");
+    ui->customPlot->xAxis->setLabel("Time (seconds)");
+    // make left and bottom axes always transfer their ranges to right and top axes:
+    connect(ui->customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->xAxis2, SLOT(setRange(QCPRange)));
+    connect(ui->customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->yAxis2, SLOT(setRange(QCPRange)));
+    // let the ranges scale themselves so graph 0 fits perfectly in the visible area:
+    ui->customPlot->graph(0)->rescaleAxes();
+    // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select graphs by clicking:
+    ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    //set ranges on x & y axis
+
+    ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
+    ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
     this->update();
 
-
-
-
 }
+
+void MainWindow::generateData(){
+    //generate number between 40-100 put it on y
+    srand (time(NULL));
+    int temp = rand()%61+40;
+    ui->customPlot->graph(0)->addData(currentTimerCount,(double)temp);
+    if(currentTimerCount > 50){
+        graphTimer->stop(); //end session primarly for testing will move over to a diff spot later
+    }
+    currentTimerCount+= 2;//timer is every 2 seconds so plot every 2
+}
+
+void MainWindow::updateGraph(){
+    //generate some data & add to graph
+    generateData();
+    //draw out graph again to refelect new data
+    ui->customPlot->replot();
+}
+
 
 //draw each rectangle
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -133,8 +173,6 @@ void MainWindow::lowerBattery(Device *d)
 
 //TODO:
 
-//Battery Initilaziation
-//Battery Level display
 //Batter level control
 
 //LEFT & RIGHT button initialiation
@@ -148,8 +186,6 @@ void MainWindow::lowerBattery(Device *d)
 
 //LEDs behaviour (green, blue, red)
 
-//Icons on the buttons
-
 //SETTINGS implementation (change level, difficulty, reset device)
 
 //HISTORY LOG Implemenation (view sessions, delete history)
@@ -161,6 +197,8 @@ void MainWindow::lowerBattery(Device *d)
 MainWindow::~MainWindow()
 {
     delete mainMenuOG;
+    delete batteryTimer;
+    delete graphTimer;
     delete ui;
 }
 
