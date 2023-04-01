@@ -64,8 +64,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->okButton, SIGNAL(pressed()), this, SLOT(navigateSubMenu()));
     connect(ui->menuButton, SIGNAL(pressed()), this, SLOT(navigateToMainMenu()));
     connect(ui->backButton, SIGNAL(pressed()), this, SLOT(navigateBack()));
-    //TODO: set up the apply to heart combo box
-
+    //set up the apply to heart combo box
+    ui->applyToHeartBox->addItem("False");
+    ui->applyToHeartBox->addItem("True");
+    connect(ui->applyToHeartBox, SIGNAL(currentIndexChanged(int)),this,SLOT(applyToSkin()));
 
 
     //SET UP COLOR LIGHTS
@@ -145,22 +147,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
+
 //Apply the device to user to measure his stuff
-void MainWindow::applyToSkin(bool checked) {
-
-    ui->heartPicLabel->setPixmap(QPixmap(checked ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
-    ui->applyToHeartBox->setCurrentIndex(checked ? 1 : 0);
-    onSkin = checked;
-
-    if (currentTimerCount != -1) {
-//        if (!onSkin) {
-//            currentSession->getTimer()->stop();
-//        }
-//        else {
-//            currentSession->getTimer()->start(1000);
-//        }
+void MainWindow::applyToSkin() {
+    //get current index
+   int status = ui->applyToHeartBox->currentIndex();
+   //update onSkin requirement
+   //If true text is selected apply to skin
+   if(status == 1){
+        onSkin = true;
     }
+    //else it is false
+   else{
+      onSkin = false;
+   }
+    //update the QPixMap
+    ui->heartPicLabel->setPixmap(QPixmap(onSkin ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
+
 }
+
 
 
 

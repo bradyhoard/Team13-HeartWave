@@ -73,9 +73,9 @@ private:
     void changePowerStatus();
     void generateData(); //will use for now to simulate data being "captured" by the device from user
     void updateGraph(); //update a graph x ticks of time
-    void applyToSkin(bool checked);
     void extractGraph();
     void beginSession();
+
 private slots:
     void powerChange();
     void navigateDownMenu();
@@ -84,7 +84,7 @@ private slots:
     void navigateToMainMenu();
     void navigateBack();
     void lowerBattery(Device*); //update the battery display on the screen based on the device battey status
-
+    void applyToSkin();
 
 
 
