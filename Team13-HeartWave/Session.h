@@ -9,7 +9,10 @@ public:
     ~Session();
     //TODO: finish the session class
 private:
-//    const QVector<double>& graphXvalues;
+
+
+
+    //    const QVector<double>& graphXvalues;
 //    const QVector<double>& graphYvalues;
 
 };
