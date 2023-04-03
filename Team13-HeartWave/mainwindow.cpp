@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //make the graph timer
-    currentTimerCount = 0;
+    currentTimerCount = -1;
     graphTimer = new QTimer(this);
     connect(graphTimer, &QTimer::timeout, this, &MainWindow::updateGraph);
 
@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     device = new Device(100);
 
     initializeMainMenu(masterMenu);
+    //set up current session to be null at first
+    currentSession = NULL;
 
     // Initialize the main menu view
     activeQListWidget = ui->mainList;
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Account for device being "off" on sim start
     powerStatus = false;
+    onSkin = false;
     //hide new session menu
     ui->customPlot->setVisible(powerStatus);
     ui->parametersViewWidget->setVisible(powerStatus);
@@ -169,8 +172,6 @@ void MainWindow::applyToSkin() {
 }
 
 
-
-
 void MainWindow::generateData(){
     //generate number between 40-100 put it on y
     srand (time(NULL));
@@ -179,7 +180,7 @@ void MainWindow::generateData(){
     if(currentTimerCount > 200){
         graphTimer->stop(); //end session primarly for testing will move over to a diff spot later
     }
-    currentTimerCount+= 2;//timer is every 2 seconds so plot every 2
+    currentTimerCount+= 1;//timer is every 1 seconds so plot every 1
 }
 
 void MainWindow::updateGraph(){
@@ -354,8 +355,6 @@ void MainWindow::navigateSubMenu() {
     }
 
 
-
-
       //Logic for when the menu is the delete menu.
 //    if (masterMenu->getName() == "CLEAR") {
 //        if (masterMenu->getMenuItems()[index] == "YES") {
@@ -384,6 +383,7 @@ void MainWindow::navigateSubMenu() {
     //Logic for when reset device settings menu option is selected
     if(masterMenu->getName() == "RESET DEVICE"){
         if (masterMenu->getMenuItems()[index] == "YES") {
+              currentSession = NULL;
               device->resetSettings();
               navigateBack();
               return;
@@ -424,17 +424,28 @@ void MainWindow::updateMenu(const QString selectedMenuItem, const QStringList me
 }
 
 void MainWindow::beginSession(){
-    graphTimer->start(2000);
+   if(onSkin == false){
+       return;
+   }
+    currentTimerCount = 0;
+    graphTimer->start(1000);
     ui->customPlot->setVisible(true);
     ui->parametersViewWidget->setVisible(true);
     ui->ballPacerPlaceHold->setVisible(true);
+    //Make new session object
+
+    //Set it as the current session
+
+    //Do CurrTime % 5 that way every 5 seconds calc stuff
 
 }
 
 void MainWindow::navigateToMainMenu() {
-//TODO: Update for what happens when exiting during a session
-//    if (currentTimerCount != -1) {
-//        //Save recording
+//TODO: Properly save the recording
+    int minRecordingTime = 5;
+    //in case of valid session save progress first before clean up
+    if (currentTimerCount >= minRecordingTime) {
+        //Save recording
 //        if (masterMenu->getParent()->getName() == "PROGRAMS") {
 //            recordings.last()->setDuration((currentTherapy->getTime())-currentTimerCount);
 //            recordings.last()->setPowerLevel(maxPowerLevel);
@@ -453,44 +464,51 @@ void MainWindow::navigateToMainMenu() {
 //        currentTherapy->getTimer()->stop();
 //        currentTherapy->getTimer()->disconnect();
 //        currentTherapy = nullptr;
-//    }
+
+    }
+    //If even a non-valid session was started clean up the UI screen
+    if(currentTimerCount != -1){
+         cleanAfterSession();
+    }
 
     while (masterMenu->getName() != "MAIN MENU") {
         masterMenu = masterMenu->getParent();
     }
 
     updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
-//    ui->programViewWidget->setVisible(false);
-//    ui->electrodeLabel->setVisible(false);
+
 }
 
+//hide UI buttons and clean variables after the session is finished
+void MainWindow::cleanAfterSession(){
+    //TODO: account for ball pacer when it is implemented to update it properly
+    graphTimer->start(1000); //restarts the timer
+    graphTimer->stop(); //then stop it
+    ui->customPlot->setVisible(false);
+    ui->parametersViewWidget->setVisible(false);
+    ui->ballPacerPlaceHold->setVisible(false);
+    //adjust timer
+    currentTimerCount = -1;
+    //adjust labels
+    ui->coherenceLabel->setText("0");
+    ui->achievmentLabel->setText("0");
+    ui->lengthLabel->setText("0");
+
+    ui->customPlot->graph()->data()->clear(); //clear data
+    ui->customPlot->replot(); //update the graph
+}
 
 void MainWindow::navigateBack() {
-//TODO: Update for what happens when exiting during a session
-    ui->rightButton->blockSignals(true);
-    ui->leftButton->blockSignals(true);
+//TODO: Properly save the recording
 
-//    if (currentTimerCount != -1) {
-//        //Save recording
-//        if (masterMenu->getParent()->getName() == "PROGRAMS") {
-//            recordings.last()->setDuration((currentTherapy->getTime())-currentTimerCount);
-//            recordings.last()->setPowerLevel(maxPowerLevel);
-//            db->addTherapyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
-//        }
-//        else {
-//            recordings.last()->setDuration(currentTimerCount);
-//            recordings.last()->setPowerLevel(maxPowerLevel);
-//            db->addFrequencyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
-//        }
-
-//        allRecordings += recordings.last()->toString();
-
-//        //Stop therapy
-//        currentTimerCount = -1;
-//        currentTherapy->getTimer()->stop();
-//        currentTherapy->getTimer()->disconnect();
-//        currentTherapy = nullptr;
-//    }
+    int minRecordingTime = 5;
+    if (currentTimerCount >= minRecordingTime) {
+        //Save recording
+    }
+    //If any session even if non-valid was started clean up
+    if (currentTimerCount != -1) {
+         cleanAfterSession();
+    }
 
     if (masterMenu->getName() == "MAIN MENU") {
         activeQListWidget->setCurrentRow(0);
@@ -499,7 +517,4 @@ void MainWindow::navigateBack() {
         masterMenu = masterMenu->getParent();
         updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
     }
-
-//    ui->programViewWidget->setVisible(false);
-//    ui->electrodeLabel->setVisible(false);
 }

@@ -75,6 +75,7 @@ private:
     void updateGraph(); //update a graph x ticks of time
     void extractGraph();
     void beginSession();
+    void cleanAfterSession();
 
 private slots:
     void powerChange();

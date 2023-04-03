@@ -34,7 +34,7 @@ public:
 
 private:
     int m_batteryLevel;
-    //QVector<Session*> sessions; //History of device pointers to all user sessions
+    QVector<Session*> sessions; //History of device pointers to all user sessions
     //Device settings
     int challengeLevel;
     int breathTimeInterval;
