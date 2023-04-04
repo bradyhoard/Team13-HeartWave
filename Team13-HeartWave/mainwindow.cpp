@@ -116,7 +116,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
 
+     //hide summary view on load
+    ui->summaryWidget->setVisible(powerStatus);
+
     this->update();
+
+
 }
 
 //TODO:
@@ -261,18 +266,10 @@ void MainWindow::changePowerStatus() {
     ui->menuLabel->setVisible(powerStatus);
     ui->batteryProgress->setVisible(powerStatus);
     ui->chargeDevice->setVisible(powerStatus);
-//    ui->statusBarQFrame->setVisible(powerStatus);
-//    ui->treatmentView->setVisible(powerStatus);
-//    ui->frequencyLabel->setVisible(powerStatus);
-//    ui->programViewWidget->setVisible(powerStatus);
-
-//    //Remove this if we want the menu to stay in the same position when the power is off
-//    if (powerStatus) {
-//        MainWindow::navigateToMainMenu();
-//        ui->applyToSkinButton->setChecked(false);
-//        applyToSkin(false);
-//    }
-
+    //Currently if turning device off during a session just hide components and thats it.
+    ui->summaryWidget->setVisible(false);
+    ui->parametersViewWidget->setVisible(false);
+    ui->customPlot->setVisible(false);
     ui->upButton->setEnabled(powerStatus);
     ui->downButton->setEnabled(powerStatus);
     ui->leftButton->setEnabled(powerStatus);
@@ -282,7 +279,6 @@ void MainWindow::changePowerStatus() {
     ui->backButton->setEnabled(powerStatus);  
     ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
-
 }
 
 void MainWindow::initializeMainMenu(Menu* m) {
@@ -354,26 +350,6 @@ void MainWindow::navigateSubMenu() {
         return;
     }
 
-
-      //Logic for when the menu is the delete menu.
-//    if (masterMenu->getName() == "CLEAR") {
-//        if (masterMenu->getMenuItems()[index] == "YES") {
-//            db->deleteRecords();
-//            allRecordings.clear();
-
-//            for (int x = 0; x < recordings.size(); x++) {
-//                delete recordings[x];
-
-//            recordings.clear();
-//            navigateBack();
-//            return;
-//        }
-//        else {
-//            navigateBack();
-//            return;
-//        }
-//    }
-
     //Logic for when the menu is the settings challenge menu
     if(masterMenu->getName() == "CHALLENGE LEVEL"){
         device->setChallengeLevel(index+1);
@@ -402,11 +378,22 @@ void MainWindow::navigateSubMenu() {
         masterMenu = masterMenu->get(index);
         MainWindow::updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
     }
-    //If the menu is has no items in it i.e it should start a session
-    else if (masterMenu->get(index)->getMenuItems().length() == 0) {
+    //If the menu is has no items and the timer is not started -> it should start a session
+    else if (masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
         // && masterMenu->getName() == "START NEW SESSION"
         //TODO: Start a new session with params
         beginSession();
+    }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
+    else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
+        ui->summaryWidget->setVisible(true); //show extra summary info
+        int minRecordingTime = 5;
+        if (currentTimerCount >= minRecordingTime) {
+            //Save session here as well
+        }
+        //Otherwise just stop the data feed and show summary view to user
+        //Assumed: User will then use go back or menu button to return out of the session
+        graphTimer->start(1000); //restarts the timer
+        graphTimer->stop(); //then stop it
     }
     //If the button pressed should display the device's recordings.
     else if (masterMenu->get(index)->getName() == "VIEW") {
@@ -487,6 +474,7 @@ void MainWindow::cleanAfterSession(){
     ui->customPlot->setVisible(false);
     ui->parametersViewWidget->setVisible(false);
     ui->ballPacerPlaceHold->setVisible(false);
+    ui->summaryWidget->setVisible(false);
     //adjust timer
     currentTimerCount = -1;
     //adjust labels
