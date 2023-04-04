@@ -396,7 +396,7 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>210</y>
+      <y>190</y>
       <width>341</width>
       <height>221</height>
      </rect>
@@ -462,7 +462,7 @@ QPushButton:pressed {
       <x>60</x>
       <y>130</y>
       <width>341</width>
-      <height>81</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -473,7 +473,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>10</y>
+       <y>0</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -494,7 +494,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>10</y>
+       <y>0</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -515,7 +515,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>10</y>
+       <y>0</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -536,7 +536,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>40</y>
+       <y>30</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -557,7 +557,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>40</y>
+       <y>30</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -578,7 +578,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>240</x>
-       <y>40</y>
+       <y>30</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -623,9 +623,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>430</y>
+      <y>410</y>
       <width>341</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -654,6 +654,240 @@ color: rgb(255, 255, 255);</string>
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="summaryWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>410</y>
+      <width>341</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0, 90, 18);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Challenge Level</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Avg Coherence</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>10</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>%Time Low</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="avgCoherence_label">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>40</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="challengeLvl_label">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>10</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>40</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>%Time Med</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>10</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>%Time High</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pTimeLow_label">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>10</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pTimeMed_label">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>40</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pTimeHigh_label">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>10</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>avgCoherence_label</zorder>
+    <zorder>challengeLvl_label</zorder>
+    <zorder>label_11</zorder>
+    <zorder>label_12</zorder>
+    <zorder>pTimeLow_label</zorder>
+    <zorder>label_13</zorder>
+    <zorder>pTimeMed_label</zorder>
+    <zorder>label_14</zorder>
+    <zorder>pTimeHigh_label</zorder>
+    <zorder>label_15</zorder>
+   </widget>
    <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
@@ -672,6 +906,7 @@ color: rgb(255, 255, 255);</string>
    <zorder>applyToHeartBox</zorder>
    <zorder>label_4</zorder>
    <zorder>ballPacerPlaceHold</zorder>
+   <zorder>summaryWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
