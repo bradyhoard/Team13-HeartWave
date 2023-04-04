@@ -481,6 +481,12 @@ void MainWindow::cleanAfterSession(){
     ui->coherenceLabel->setText("0");
     ui->achievmentLabel->setText("0");
     ui->lengthLabel->setText("0");
+    ui->challengeLvl_label->setText("0");
+    ui->avgCoherence_label->setText("0");
+
+    ui->pTimeLow_label->setText("0");
+    ui->pTimeHigh_label->setText("0");
+    ui->pTimeMed_label->setText("0");
 
     ui->customPlot->graph()->data()->clear(); //clear data
     ui->customPlot->replot(); //update the graph
