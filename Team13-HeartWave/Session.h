@@ -1,11 +1,14 @@
 #ifndef SESSION_H
 #define SESSION_H
 #include <qcustomplot.h>
+#include <QDateTime>
+#include <QTime>
+#include <QVector>
 
 class Session{
 
-public:                         //Date as well
-    Session(int challengeLevel);
+public:
+    Session(int challengeLevel, const QDateTime& date);
     ~Session();
     //getters
     int getSessionTime();
@@ -15,6 +18,7 @@ public:                         //Date as well
     int getPTimeInLow();
     int getPTimeInMed();
     int getPTimeInHigh();
+    QDateTime getStartTime();
     //get graph
     //get date
 
@@ -26,6 +30,8 @@ public:                         //Date as well
     void setPTimeInMed(int pMed);
     void setPTimeInHigh(int pHigh);
     //save graph data for x and y
+    void addPointX(double point);
+    void addPointY(double point);
 
 private:
     int length; //in seconds
@@ -35,9 +41,9 @@ private:
     int pTimeLow; //% time in low coherence
     int pTimeMed; //% time in med coherence
     int pTimeHigh; //% time in high coherence
-//    const QVector<double>& graphXvalues;
-//    const QVector<double>& graphYvalues;
-//Date of session -> look denas and yoink from there
+    QVector<double> graphXvalues;
+    QVector<double> graphYvalues;
+    QDateTime startTime;
 };
 
 

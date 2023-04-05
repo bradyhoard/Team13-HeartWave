@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "device.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -116,7 +118,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
 
-     //hide summary view on load
+     //hide session summary view on load
     ui->summaryWidget->setVisible(powerStatus);
 
     this->update();
@@ -126,17 +128,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 //TODO:
 
-
 //LEFT & RIGHT button initialiation
 //LEFT & RIGHT button control
 
-//Proper SubMenu Navigation in navigateSubMenu() for SESSION, SETTINGS & HISTORY
+//Proper SubMenu Navigation in navigateSubMenu() for SETTINGS & HISTORY
 //SESSION score types displayed (coherence, level, achievement)
-//HR Contact icon
 
-//GRAPH display and update (graph module)
-
-//LEDs behaviour (green, blue, red)
+//GRAPH saving
 
 //SETTINGS implementation (change level, difficulty, reset device)
 
@@ -158,7 +156,7 @@ MainWindow::~MainWindow()
 
 
 
-//Apply the device to user to measure his stuff
+//Apply the device to user to measure his vitals
 void MainWindow::applyToSkin() {
     //get current index
    int status = ui->applyToHeartBox->currentIndex();
@@ -191,8 +189,6 @@ void MainWindow::generateData(){
     //this will only light red becuase 0 is passed , once we have data and an algo. we can pass in the colored light that needs to be lit up
     lightenCoherenceLights(0);
 
-
-
 }
 
 void MainWindow::updateGraph(){
@@ -201,21 +197,22 @@ void MainWindow::updateGraph(){
     //draw out graph again to refelect new data
     ui->customPlot->replot();
 }
-//extract the graph content into a given session in the params
-//will be super akward cuz qCustomPlot only allows const stuff to go in-out....
+
+
+//Extracts all the points X (keys) and Y (values) from the graph and saves them
+//to the session vectors that hold all points X and Y recorded by the device to be displayed later
+//in history logs to the user.
 void MainWindow::extractGraph(){
-    //type data() returns is weird so we can cheat with auto lol
-//    auto plotData = ui->customPlot->graph(0)->data();
-//    QVector<double> xVals = new QVector();
-//    QVector<double> yVals = new QVector();
-//    for (int i = 0 ; i < plotData->size() ; ++i) {
-//         double lastKey = plotData->at(i)->key;
-//         double lastValue = plotData->at(i)->value;
-//         qDebug () << "X:" << i << lastKey;
-//         qDebug () << "Y:" << i << lastValue;
-//        xVals.append(lastKey);
-//        yVals.append(lastValue);
-//    }
+    //type data() returns is weird so we can cheat with auto keyword lol
+    auto plotData = ui->customPlot->graph(0)->data();
+    for (int i = 0 ; i < plotData->size() ; ++i) {
+         double lastKey = plotData->at(i)->key;
+         double lastValue = plotData->at(i)->value;
+         qDebug () << "X:" << i << lastKey;
+         qDebug () << "Y:" << i << lastValue;
+        currentSession->addPointX(lastKey);
+        currentSession->addPointY(lastValue);
+    }
 }
 
 //draw each rectangle
@@ -488,8 +485,6 @@ void MainWindow::navigateSubMenu() {
     }
     //If the menu is has no items and the timer is not started -> it should start a session
     else if (masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
-        // && masterMenu->getName() == "START NEW SESSION"
-        //TODO: Start a new session with params
         beginSession();
     }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
     else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
@@ -497,6 +492,7 @@ void MainWindow::navigateSubMenu() {
         int minRecordingTime = 5;
         if (currentTimerCount >= minRecordingTime) {
             //Save session here as well
+            saveSessionData();
         }
         //Otherwise just stop the data feed and show summary view to user
         //Assumed: User will then use go back or menu button to return out of the session
@@ -528,20 +524,22 @@ void MainWindow::beginSession(){
     ui->parametersViewWidget->setVisible(true);
     ui->ballPacerPlaceHold->setVisible(true);
     //Make new session object
-
+    Session* s = new Session(device->getChallengeLevel(),QDateTime::currentDateTime());
     //Set it as the current session
-
+    currentSession = s;
     //Call functions tied to timer that update UI parameters and later will be extracted to save a session.
 
 }
+
 
 void MainWindow::navigateToMainMenu() {
 //TODO: Properly save the recording
     int minRecordingTime = 5;
     //in case of valid session save progress first before clean up
-    if (currentTimerCount >= minRecordingTime) {
+    if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
-//        if (masterMenu->getParent()->getName() == "PROGRAMS") {
+        saveSessionData();
+ //        if (masterMenu->getParent()->getName() == "PROGRAMS") {
 //            recordings.last()->setDuration((currentTherapy->getTime())-currentTimerCount);
 //            recordings.last()->setPowerLevel(maxPowerLevel);
 //            db->addTherapyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
@@ -607,8 +605,9 @@ void MainWindow::navigateBack() {
 //TODO: Properly save the recording
 
     int minRecordingTime = 5;
-    if (currentTimerCount >= minRecordingTime) {
+    if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
+        saveSessionData();
     }
     //If any session even if non-valid was started clean up
     if (currentTimerCount != -1) {
@@ -622,4 +621,15 @@ void MainWindow::navigateBack() {
         masterMenu = masterMenu->getParent();
         updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
     }
+}
+//Save all the current session parameters to the device
+void MainWindow::saveSessionData(){
+    //save session gathered parameters (either take from UI or have it gathering and saving every 5 seconds atutomatically)
+
+    //save graph data
+    extractGraph();
+    //append current session to the device vector that will handle de-alloc
+    device->addSession(currentSession);
+    //set current session back to null
+    currentSession = NULL;
 }

@@ -30,7 +30,7 @@ public:
     void setChallengeLevel(int lvl);
     void setBreathPacer(int secs);
     void resetSettings();
-
+    void addSession(Session* s);
 
 private:
     int m_batteryLevel;

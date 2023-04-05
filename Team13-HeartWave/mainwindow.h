@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QtGlobal>
 #include <QPainter>
+#include <QDateTime>
 #include<ctime>
 #include "menu.h"
 #include "device.h"
@@ -78,6 +79,7 @@ private:
     void cleanAfterSession();
     void darkenCoherenceLights();
     void lightenCoherenceLights(int colorIndex);
+    void saveSessionData();
 
 private slots:
     void powerChange();

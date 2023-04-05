@@ -54,3 +54,7 @@ void Device::resetSettings(){
     challengeLevel = defaultChallenge;
     sessions.clear();
 }
+
+void Device::addSession(Session* s){
+    sessions.append(s);
+}

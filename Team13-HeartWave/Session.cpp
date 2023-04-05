@@ -1,6 +1,6 @@
 #include "Session.h"
 
-Session::Session(int challengeLevel): challengeLvl(challengeLevel){}
+Session::Session(int challengeLevel,const QDateTime& date): challengeLvl(challengeLevel), startTime(date){}
 Session::~Session(){}
 
 
@@ -13,6 +13,8 @@ int Session::getChallengeLvl(){return challengeLvl;}
 int Session::getPTimeInLow(){return pTimeLow;}
 int Session::getPTimeInMed(){return pTimeMed;}
 int Session::getPTimeInHigh(){return pTimeHigh;}
+QDateTime Session::getStartTime() { return startTime; }
+
 //get graph
 //get date
 
@@ -36,3 +38,10 @@ void Session::setPTimeInHigh(int pHigh){
     pTimeHigh = pHigh;
 }
 
+
+void Session::addPointX(double point){
+    graphXvalues.append(point);
+}
+void Session::addPointY(double point){
+    graphYvalues.append(point);
+}
