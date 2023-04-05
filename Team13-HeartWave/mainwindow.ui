@@ -888,6 +888,29 @@ color: rgb(255, 255, 255);</string>
     <zorder>pTimeHigh_label</zorder>
     <zorder>label_15</zorder>
    </widget>
+   <widget class="QComboBox" name="coherenceVal_Box">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>440</y>
+      <width>91</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>440</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Coherence Value:</string>
+    </property>
+   </widget>
    <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
@@ -907,6 +930,8 @@ color: rgb(255, 255, 255);</string>
    <zorder>label_4</zorder>
    <zorder>ballPacerPlaceHold</zorder>
    <zorder>summaryWidget</zorder>
+   <zorder>coherenceVal_Box</zorder>
+   <zorder>label_6</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

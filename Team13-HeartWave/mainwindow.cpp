@@ -118,6 +118,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
 
+    //set up the coherence level box so user can select vals from it
+    ui->coherenceVal_Box->addItem("Poor");
+    ui->coherenceVal_Box->addItem("Good");
+    ui->coherenceVal_Box->addItem("Excellent");
+
      //hide session summary view on load
     ui->summaryWidget->setVisible(powerStatus);
 
