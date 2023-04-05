@@ -52,7 +52,5 @@ void Device::resetSettings(){
 
     breathTimeInterval = defaultTime;
     challengeLevel = defaultChallenge;
-
-    //TODO: clear the user sessions
-    //just empty the session vector
+    sessions.clear();
 }

@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "device.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -531,7 +531,7 @@ void MainWindow::beginSession(){
 
     //Set it as the current session
 
-    //Do CurrTime % 5 that way every 5 seconds calc stuff
+    //Call functions tied to timer that update UI parameters and later will be extracted to save a session.
 
 }
 
