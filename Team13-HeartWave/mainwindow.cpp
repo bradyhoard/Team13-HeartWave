@@ -83,7 +83,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QColor darkerColor;
 
-
     //darken each color
     darkerColor = colors.at(2).darker(450);
     colors.replace(2, darkerColor);
@@ -93,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     darkerColor = colors.at(0).darker(450);
     colors.replace(0, darkerColor);
+
 
 
     //SET UP GRAPH
@@ -186,6 +186,13 @@ void MainWindow::generateData(){
         graphTimer->stop(); //end session primarly for testing will move over to a diff spot later
     }
     currentTimerCount+= 1;//timer is every 1 seconds so plot every 1
+
+
+    //this will only light red becuase 0 is passed , once we have data and an algo. we can pass in the colored light that needs to be lit up
+    lightenCoherenceLights(0);
+
+
+
 }
 
 void MainWindow::updateGraph(){
@@ -223,6 +230,107 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.drawRect(coherence_rectangles.at(i));
     }
+}
+
+//darken each color , this is called when a session is currently not in progress
+void MainWindow::darkenCoherenceLights(){
+    int red = colors.at(0).red();
+    int blue = colors.at(1).blue();
+    int green = colors.at(2).green();
+    QColor darkerColor;
+
+
+   if (red == 255){
+       darkerColor = colors.at(0).darker(450);
+       colors.replace(0, darkerColor);
+   }
+
+   if (blue == 255){
+       darkerColor = colors.at(1).darker(450);
+       colors.replace(1, darkerColor);
+   }
+
+   if (green == 255){
+       darkerColor = colors.at(2).darker(450);
+       colors.replace(2, darkerColor);
+   }
+   update();
+
+}
+
+/* int colorIndex = color to be lightened up
+ * 0 - Red
+ * 1 - Blue
+ * 2 - Green
+*/
+void MainWindow::lightenCoherenceLights(int colorIndex){
+    int red = colors.at(0).red();
+    int blue = colors.at(1).blue();
+    int green = colors.at(2).green();
+
+
+    //light red
+    if (colorIndex == 0 && red != 255){
+
+        QColor lighterColor = colors.at(0).lighter(450);
+        colors.replace(0, lighterColor);
+
+        QColor darkerColor;
+
+        if (blue == 255){
+            darkerColor = colors.at(1).darker(450);
+            colors.replace(1, darkerColor);
+        }
+
+        if (green == 255){
+            darkerColor = colors.at(2).darker(450);
+            colors.replace(2, darkerColor);
+        }
+
+    }
+
+    //light blue
+    else if (colorIndex == 1  && blue != 255){
+        QColor lighterColor = colors.at(1).lighter(450);
+        colors.replace(1, lighterColor);
+
+        QColor darkerColor;
+
+        if (red == 255){
+            darkerColor = colors.at(0).darker(450);
+            colors.replace(0, darkerColor);
+        }
+
+
+        if (green == 255){
+            darkerColor = colors.at(2).darker(450);
+            colors.replace(2, darkerColor);
+        }
+    }
+
+    //light green
+    else if (colorIndex == 2 && green != 255){
+        QColor lighterColor = colors.at(2).lighter(450);
+        colors.replace(2, lighterColor);
+
+        QColor darkerColor;
+
+
+        if (red == 255){
+            darkerColor = colors.at(0).darker(450);
+            colors.replace(0, darkerColor);
+        }
+
+
+        if (blue == 255){
+            darkerColor = colors.at(1).darker(450);
+            colors.replace(1, darkerColor);
+        }
+    }
+
+    update();
+
+
 }
 
 void MainWindow::lowerBattery(Device *d)
@@ -490,6 +598,9 @@ void MainWindow::cleanAfterSession(){
 
     ui->customPlot->graph()->data()->clear(); //clear data
     ui->customPlot->replot(); //update the graph
+
+    //darken the colors
+    darkenCoherenceLights();
 }
 
 void MainWindow::navigateBack() {

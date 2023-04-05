@@ -76,6 +76,8 @@ private:
     void extractGraph();
     void beginSession();
     void cleanAfterSession();
+    void darkenCoherenceLights();
+    void lightenCoherenceLights(int colorIndex);
 
 private slots:
     void powerChange();
