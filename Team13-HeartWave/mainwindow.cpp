@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->chargeDevice, &QPushButton::clicked, this, [=]() {
             device->setFullCharge();
             ui->batteryProgress->setValue(device->getBatteryLevel());
+            ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
         });
 
     batteryTimer = new QTimer(this);
@@ -190,9 +191,22 @@ void MainWindow::generateData(){
     }
     currentTimerCount+= 1;//timer is every 1 seconds so plot every 1
 
+    QString coherenceLevel = ui->coherenceVal_Box->currentText();
 
-    //this will only light red becuase 0 is passed , once we have data and an algo. we can pass in the colored light that needs to be lit up
-    lightenCoherenceLights(0);
+    //red
+    if (coherenceLevel == "Poor"){
+         lightenCoherenceLights(0);
+    }
+
+    //blue
+    else if (coherenceLevel == "Good"){
+         lightenCoherenceLights(1);
+    }
+
+    //green
+    else{
+         lightenCoherenceLights(2);
+    }
 
 }
 
@@ -356,6 +370,7 @@ void MainWindow::lowerBattery(Device *d)
 
         powerChange();
         d->setFullCharge();
+         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
     }
     ui->batteryProgress->setValue(d->getBatteryLevel());
 
