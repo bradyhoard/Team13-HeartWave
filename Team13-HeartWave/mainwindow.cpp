@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "device.h"
 
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->setVisible(powerStatus);
     ui->parametersViewWidget->setVisible(powerStatus);
     ui->ballPacerPlaceHold->setVisible(powerStatus);
+    ui->breath_pacer->setTextVisible(powerStatus);
     changePowerStatus();
     connect(ui->powerButton, SIGNAL(pressed()), this, SLOT(powerChange()));
 
@@ -47,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->chargeDevice, &QPushButton::clicked, this, [=]() {
             device->setFullCharge();
             ui->batteryProgress->setValue(device->getBatteryLevel());
+            ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
         });
 
     batteryTimer = new QTimer(this);
@@ -61,6 +65,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //TODO: RIGHT & LEFT BUTTONS
+    //to increase the breath pacer time
+    connect(ui->breath_pacer_time,SIGNAL(valueChanged(int )),this,SLOT(breathPacerTimeValueChanged(int )));
+
     // device interface button connections
     connect(ui->upButton, SIGNAL(pressed()), this, SLOT(navigateUpMenu()));
     connect(ui->downButton, SIGNAL(pressed()), this, SLOT(navigateDownMenu()));
@@ -116,27 +123,33 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
 
-     //hide summary view on load
+    //set up the coherence level box so user can select vals from it
+    ui->coherenceVal_Box->addItem("Poor");
+    ui->coherenceVal_Box->addItem("Good");
+    ui->coherenceVal_Box->addItem("Excellent");
+
+     //hide session summary view on load
     ui->summaryWidget->setVisible(powerStatus);
 
     this->update();
+    // time for breath pacer movment
 
+    breathTimer = new QTimer(this);
+    // breath in / out variable
+    breathInOut = true;
 
 }
 
-//TODO:
 
+//TODO:
 
 //LEFT & RIGHT button initialiation
 //LEFT & RIGHT button control
 
-//Proper SubMenu Navigation in navigateSubMenu() for SESSION, SETTINGS & HISTORY
+//Proper SubMenu Navigation in navigateSubMenu() for SETTINGS & HISTORY
 //SESSION score types displayed (coherence, level, achievement)
-//HR Contact icon
 
-//GRAPH display and update (graph module)
-
-//LEDs behaviour (green, blue, red)
+//GRAPH saving
 
 //SETTINGS implementation (change level, difficulty, reset device)
 
@@ -150,6 +163,7 @@ MainWindow::~MainWindow()
 {
     delete mainMenuOG;
     delete batteryTimer;
+    delete breathTimer;
     delete graphTimer;
     delete device;
     delete ui;
@@ -158,7 +172,7 @@ MainWindow::~MainWindow()
 
 
 
-//Apply the device to user to measure his stuff
+//Apply the device to user to measure his vitals
 void MainWindow::applyToSkin() {
     //get current index
    int status = ui->applyToHeartBox->currentIndex();
@@ -187,11 +201,22 @@ void MainWindow::generateData(){
     }
     currentTimerCount+= 1;//timer is every 1 seconds so plot every 1
 
+    QString coherenceLevel = ui->coherenceVal_Box->currentText();
 
-    //this will only light red becuase 0 is passed , once we have data and an algo. we can pass in the colored light that needs to be lit up
-    lightenCoherenceLights(0);
+    //red
+    if (coherenceLevel == "Poor"){
+         lightenCoherenceLights(0);
+    }
 
+    //blue
+    else if (coherenceLevel == "Good"){
+         lightenCoherenceLights(1);
+    }
 
+    //green
+    else{
+         lightenCoherenceLights(2);
+    }
 
 }
 
@@ -201,21 +226,22 @@ void MainWindow::updateGraph(){
     //draw out graph again to refelect new data
     ui->customPlot->replot();
 }
-//extract the graph content into a given session in the params
-//will be super akward cuz qCustomPlot only allows const stuff to go in-out....
+
+
+//Extracts all the points X (keys) and Y (values) from the graph and saves them
+//to the session vectors that hold all points X and Y recorded by the device to be displayed later
+//in history logs to the user.
 void MainWindow::extractGraph(){
-    //type data() returns is weird so we can cheat with auto lol
-//    auto plotData = ui->customPlot->graph(0)->data();
-//    QVector<double> xVals = new QVector();
-//    QVector<double> yVals = new QVector();
-//    for (int i = 0 ; i < plotData->size() ; ++i) {
-//         double lastKey = plotData->at(i)->key;
-//         double lastValue = plotData->at(i)->value;
-//         qDebug () << "X:" << i << lastKey;
-//         qDebug () << "Y:" << i << lastValue;
-//        xVals.append(lastKey);
-//        yVals.append(lastValue);
-//    }
+    //type data() returns is weird so we can cheat with auto keyword lol
+    auto plotData = ui->customPlot->graph(0)->data();
+    for (int i = 0 ; i < plotData->size() ; ++i) {
+         double lastKey = plotData->at(i)->key;
+         double lastValue = plotData->at(i)->value;
+         qDebug () << "X:" << i << lastKey;
+         qDebug () << "Y:" << i << lastValue;
+        currentSession->addPointX(lastKey);
+        currentSession->addPointY(lastValue);
+    }
 }
 
 //draw each rectangle
@@ -354,6 +380,7 @@ void MainWindow::lowerBattery(Device *d)
 
         powerChange();
         d->setFullCharge();
+         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
     }
     ui->batteryProgress->setValue(d->getBatteryLevel());
 
@@ -378,13 +405,14 @@ void MainWindow::changePowerStatus() {
     ui->summaryWidget->setVisible(false);
     ui->parametersViewWidget->setVisible(false);
     ui->customPlot->setVisible(false);
+    ui->breath_pacer->setVisible(false);
     ui->upButton->setEnabled(powerStatus);
     ui->downButton->setEnabled(powerStatus);
     ui->leftButton->setEnabled(powerStatus);
     ui->rightButton->setEnabled(powerStatus);
     ui->menuButton->setEnabled(powerStatus);
     ui->okButton->setEnabled(powerStatus);
-    ui->backButton->setEnabled(powerStatus);  
+    ui->backButton->setEnabled(powerStatus);
     ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
 }
@@ -488,15 +516,16 @@ void MainWindow::navigateSubMenu() {
     }
     //If the menu is has no items and the timer is not started -> it should start a session
     else if (masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
-        // && masterMenu->getName() == "START NEW SESSION"
-        //TODO: Start a new session with params
         beginSession();
+
     }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
     else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
         ui->summaryWidget->setVisible(true); //show extra summary info
+        ui->ballPacerPlaceHold->setVisible(false);//hide the breath paser
         int minRecordingTime = 5;
         if (currentTimerCount >= minRecordingTime) {
             //Save session here as well
+            saveSessionData();
         }
         //Otherwise just stop the data feed and show summary view to user
         //Assumed: User will then use go back or menu button to return out of the session
@@ -527,21 +556,44 @@ void MainWindow::beginSession(){
     ui->customPlot->setVisible(true);
     ui->parametersViewWidget->setVisible(true);
     ui->ballPacerPlaceHold->setVisible(true);
+    ui->breath_pacer->setVisible(true);
     //Make new session object
-
+    Session* s = new Session(device->getChallengeLevel(),QDateTime::currentDateTime());
     //Set it as the current session
+    currentSession = s;
+    //Call functions tied to timer that update UI parameters and later will be extracted to save a session.
+    //start the breath pacer
+    ui->breath_pacer->setRange(0,30);
+    ui->breath_pacer->setMinimum(0);
+    ui->breath_pacer->setMaximum(device->getBreathPacer());
+    ui->breath_pacer->setTextVisible(false);
+    ui->breath_pacer->setValue(1);
 
-    //Do CurrTime % 5 that way every 5 seconds calc stuff
+
+    connect(breathTimer, &QTimer::timeout, this, [=]() {
+
+        breathPacerMove(1);
+
+        }
+  );
+
+    // every 1 seconds the function above will be called
+
+    breathTimer->start(1000);
+
+
 
 }
+
 
 void MainWindow::navigateToMainMenu() {
 //TODO: Properly save the recording
     int minRecordingTime = 5;
     //in case of valid session save progress first before clean up
-    if (currentTimerCount >= minRecordingTime) {
+    if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
-//        if (masterMenu->getParent()->getName() == "PROGRAMS") {
+        saveSessionData();
+ //        if (masterMenu->getParent()->getName() == "PROGRAMS") {
 //            recordings.last()->setDuration((currentTherapy->getTime())-currentTimerCount);
 //            recordings.last()->setPowerLevel(maxPowerLevel);
 //            db->addTherapyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
@@ -579,10 +631,16 @@ void MainWindow::cleanAfterSession(){
     //TODO: account for ball pacer when it is implemented to update it properly
     graphTimer->start(1000); //restarts the timer
     graphTimer->stop(); //then stop it
+    //stop the breath timer and reset the breath time to 10 seconds.
+    breathTimer->start(1000);
+    breathTimer->stop();
+    device->setBreathPacer(10);
+
     ui->customPlot->setVisible(false);
     ui->parametersViewWidget->setVisible(false);
     ui->ballPacerPlaceHold->setVisible(false);
     ui->summaryWidget->setVisible(false);
+    ui->breath_pacer->setVisible(false);
     //adjust timer
     currentTimerCount = -1;
     //adjust labels
@@ -607,8 +665,9 @@ void MainWindow::navigateBack() {
 //TODO: Properly save the recording
 
     int minRecordingTime = 5;
-    if (currentTimerCount >= minRecordingTime) {
+    if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
+        saveSessionData();
     }
     //If any session even if non-valid was started clean up
     if (currentTimerCount != -1) {
@@ -623,3 +682,61 @@ void MainWindow::navigateBack() {
         updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
     }
 }
+//Save all the current session parameters to the device
+void MainWindow::saveSessionData(){
+    //save session gathered parameters (either take from UI or have it gathering and saving every 5 seconds atutomatically)
+
+    //save graph data
+    extractGraph();
+    //append current session to the device vector that will handle de-alloc
+    device->addSession(currentSession);
+    //set current session back to null
+    currentSession = NULL;
+}
+//change the value of breath time
+void MainWindow::breathPacerTimeValueChanged(int arg1)
+{
+
+    device->setBreathPacer(arg1);
+
+}
+// the breath ball going back and forth
+void MainWindow::breathPacerMove(int value)
+{
+
+    int pacer_value = ui->breath_pacer->value();
+
+    //the ball moves forth in breath in  for half of breath time
+
+    if(pacer_value<=(device->getBreathPacer()-1)/2 && breathInOut){
+
+        ui->breath_pacer->setValue(ui->breath_pacer->value()+value);
+        QTime endTime1 = QTime::currentTime().addSecs(1);
+        while(QTime::currentTime()<endTime1){
+
+        }
+
+    }// the breath out start
+    if (pacer_value>(device->getBreathPacer()-1)/2) {
+
+        breathInOut = false;
+
+    // the ball ,obe back in breath out for the half of braeth time
+    }if(pacer_value>0 && (breathInOut==false)){
+            ui->breath_pacer->setValue(ui->breath_pacer->value()- value);
+
+            QTime endTime2 = QTime::currentTime().addSecs(1);
+            while(QTime::currentTime()<endTime2){
+
+    }
+    }else{// breath in satrt again
+                 breathInOut = true;
+
+          }
+        }
+
+
+
+
+
+

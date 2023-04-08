@@ -10,6 +10,12 @@
     <height>790</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -53,7 +59,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -89,7 +95,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -125,7 +131,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -161,7 +167,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -197,7 +203,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -233,7 +239,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -269,7 +275,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -305,7 +311,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -372,7 +378,7 @@ border-radius: 15px;
 }
 
 QPushButton:pressed {
-	background-color: green;
+        background-color: green;
 }</string>
     </property>
     <property name="text">
@@ -398,7 +404,7 @@ QPushButton:pressed {
       <x>60</x>
       <y>190</y>
       <width>341</width>
-      <height>221</height>
+      <height>201</height>
      </rect>
     </property>
    </widget>
@@ -596,28 +602,81 @@ color: rgb(255, 255, 255);</string>
      </property>
     </widget>
    </widget>
-   <widget class="QComboBox" name="applyToHeartBox">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>570</y>
-      <width>91</width>
-      <height>25</height>
+      <x>450</x>
+      <y>380</y>
+      <width>216</width>
+      <height>28</height>
      </rect>
     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Change Breath Paser time :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="breath_pacer_time">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>30</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>440</y>
+      <width>239</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Change Coherence Value:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="coherenceVal_Box"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>510</x>
       <y>570</y>
-      <width>101</width>
-      <height>31</height>
+      <width>174</width>
+      <height>27</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Apply to Heart</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Apply to Heart</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="applyToHeartBox"/>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="ballPacerPlaceHold" native="true">
     <property name="geometry">
@@ -632,35 +691,44 @@ color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(52, 101, 164);
 color: rgb(255, 255, 255);</string>
     </property>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>10</y>
-       <width>231</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>BALL PACER PLACE HOLDER</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Breath Pacer</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="breath_pacer">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(238, 238, 236);
+color: rgb(138, 226, 52);
+color: rgb(255, 255, 255);
+selection-color: rgb(138, 226, 52);</string>
+       </property>
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="summaryWidget" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>410</y>
+      <y>390</y>
       <width>341</width>
-      <height>81</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -888,6 +956,9 @@ color: rgb(255, 255, 255);</string>
     <zorder>pTimeHigh_label</zorder>
     <zorder>label_15</zorder>
    </widget>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
    <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
@@ -900,12 +971,10 @@ color: rgb(255, 255, 255);</string>
    <zorder>powerButton</zorder>
    <zorder>chargeDevice</zorder>
    <zorder>batteryProgress</zorder>
-   <zorder>customPlot</zorder>
    <zorder>menuFrame</zorder>
    <zorder>parametersViewWidget</zorder>
-   <zorder>applyToHeartBox</zorder>
-   <zorder>label_4</zorder>
    <zorder>ballPacerPlaceHold</zorder>
+   <zorder>customPlot</zorder>
    <zorder>summaryWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -33,17 +33,10 @@ void Device::setChallengeLevel(int lvl){
 }
 //sets the breath pace of the device
 void Device::setBreathPacer(int secs){
-    int maxBreath = 30;
-    int minBreath = 1;
-    if(secs > maxBreath){
-        breathTimeInterval = maxBreath;
-    }
-    if(secs < minBreath){
-        breathTimeInterval = minBreath;
-    }
-    else{
+
+
         breathTimeInterval = secs;
-    }
+
 }
 
 void Device::resetSettings(){
@@ -52,7 +45,9 @@ void Device::resetSettings(){
 
     breathTimeInterval = defaultTime;
     challengeLevel = defaultChallenge;
+    sessions.clear();
+}
 
-    //TODO: clear the user sessions
-    //just empty the session vector
+void Device::addSession(Session* s){
+    sessions.append(s);
 }

@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QtGlobal>
 #include <QPainter>
+#include <QDateTime>
 #include<ctime>
 #include "menu.h"
 #include "device.h"
@@ -60,6 +61,10 @@ private:
 
     QTimer* batteryTimer;
 
+    QTimer* breathTimer;
+
+    bool breathInOut;
+
     //graph variables
     QTimer *graphTimer; //procedure timer
     double currentTimerCount;
@@ -78,6 +83,7 @@ private:
     void cleanAfterSession();
     void darkenCoherenceLights();
     void lightenCoherenceLights(int colorIndex);
+    void saveSessionData();
 
 private slots:
     void powerChange();
@@ -94,5 +100,7 @@ private slots:
 
 
 
+    void breathPacerTimeValueChanged(int arg1);
+    void breathPacerMove(int value);
 };
 #endif // MAINWINDOW_H
