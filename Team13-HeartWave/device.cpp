@@ -33,10 +33,7 @@ void Device::setChallengeLevel(int lvl){
 }
 //sets the breath pace of the device
 void Device::setBreathPacer(int secs){
-
-
         breathTimeInterval = secs;
-
 }
 
 void Device::resetSettings(){

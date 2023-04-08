@@ -18,9 +18,9 @@ double Session::getAchievement(){return achievement; }
 double Session::getAvgScore(){return (totalCoherenceScore/length);}
 double Session::getTotalScore(){return totalCoherenceScore;}
 int Session::getChallengeLvl(){return challengeLvl;}
-int Session::getPTimeInLow(){return pTimeLow;}
-int Session::getPTimeInMed(){return pTimeMed;}
-int Session::getPTimeInHigh(){return pTimeHigh;}
+double Session::getPTimeInLow(){return pTimeLow;}
+double Session::getPTimeInMed(){return pTimeMed;}
+double Session::getPTimeInHigh(){return pTimeHigh;}
 QDateTime Session::getStartTime() { return startTime; }
 
 //get graph

@@ -99,6 +99,7 @@ private:
     int generateGoodCoherence();
     int generateExcellentCoherence();
     void runSessionSim();
+    void updateSummaryScreen();
 
 private slots:
     void powerChange();

@@ -15,9 +15,9 @@ public:
     double getAchievement();
     double getAvgScore();
     int getChallengeLvl();
-    int getPTimeInLow();
-    int getPTimeInMed();
-    int getPTimeInHigh();
+    double getPTimeInLow();
+    double getPTimeInMed();
+    double getPTimeInHigh();
     double getTotalScore();
     QDateTime getStartTime();
     //get graph
@@ -39,9 +39,9 @@ private:
     double achievement;
     double totalCoherenceScore;
     int challengeLvl;
-    int pTimeLow; //% time in low coherence
-    int pTimeMed; //% time in med coherence
-    int pTimeHigh; //% time in high coherence
+    double pTimeLow; //% time in low coherence
+    double pTimeMed; //% time in med coherence
+    double pTimeHigh; //% time in high coherence
     QVector<double> graphXvalues;
     QVector<double> graphYvalues;
     QDateTime startTime;

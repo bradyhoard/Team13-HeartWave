@@ -410,8 +410,8 @@ void MainWindow::runSessionSim(){
     if((int)currentTimerCount % 5 == 0){
                                     //achievement lvl
         QString achievmentScore = QString::number(currentSession->getAchievement());
-                                    //coherence avg over the last 5 seconds
-        QString coherenceScore = QString::number(currentSession->getTotalScore()/currentSession->getSessionTime());
+                                    //coherence avg over the last 5 seconds and adjust 2 to decimal numbers
+        QString coherenceScore = QString::number(std::ceil(currentSession->getTotalScore()/currentSession->getSessionTime() * 100)/100);
         ui->coherenceLabel->setText(coherenceScore);
         ui->achievmentLabel->setText(achievmentScore);
     }
@@ -422,7 +422,7 @@ void MainWindow::runSessionSim(){
 //to the session vectors that hold all points X and Y recorded by the device to be displayed later
 //in history logs to the user.
 void MainWindow::extractGraph(){
-    //type data() returns is weird so we can cheat with auto keyword lol
+    //type data() return is weird so we can cheat with auto keyword lol
     auto plotData = ui->customPlot->graph(0)->data();
     for (int i = 0 ; i < plotData->size() ; ++i) {
          double lastKey = plotData->at(i)->key;
@@ -617,7 +617,7 @@ void MainWindow::initializeMainMenu(Menu* m) {
 
     Menu* viewHistory = new Menu("VIEW",{}, history);
     Menu* clearDevice = new Menu("RESET DEVICE", {"YES","NO"}, settings);
-    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Beginer","Adept","Intermediate","Advanced"},settings);
+    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Beginner","Adept","Intermediate","Advanced"},settings);
 
     history->addChildMenu(viewHistory);
     settings->addChildMenu(challengeLvls);
@@ -693,10 +693,14 @@ void MainWindow::navigateSubMenu() {
     else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
         ui->summaryWidget->setVisible(true); //show extra summary info
         ui->ballPacerWidget->setVisible(false);//hide the breath paser
+        //populate the summary screen
+
         int minRecordingTime = 5;
         if (currentTimerCount >= minRecordingTime) {
             //Save session here as well
+            updateSummaryScreen();
             saveSessionData();
+
         }
         //Otherwise just stop the data feed and show summary view to user
         //Assumed: User will then use go back or menu button to return out of the session
@@ -710,6 +714,36 @@ void MainWindow::navigateSubMenu() {
     }
 
 }
+//update the summary screen from the info collected at the end of the session
+void MainWindow::updateSummaryScreen(){
+    //update the achievment score to the most current one and not every 5 seconds
+
+    //update coherence to the last coherence
+    QString avgCoh = QString::number(std::ceil(currentSession->getAvgScore() * 100) / 100.0);
+    ui->avgCoherence_label->setText(avgCoh);
+    switch(currentSession->getChallengeLvl()){
+        case 2:
+            ui->challengeLvl_label->setText("Adept");
+            break;
+        case 3:
+            ui->challengeLvl_label->setText("Intermediate");
+            break;
+        case 4:
+            ui->challengeLvl_label->setText("Advanced");
+            break;
+        default:
+            ui->challengeLvl_label->setText("Beginner");
+    }
+    //calc %time in each level
+    QString lowP = QString::number(std::ceil(currentSession->getPTimeInLow()/currentSession->getSessionTime() * 10000) /100.0);
+    ui->pTimeLow_label->setText(lowP + "%");
+    QString medP = QString::number(std::ceil(currentSession->getPTimeInMed()/currentSession->getSessionTime() * 10000) /100.0);
+    ui->pTimeMed_label->setText(medP + "%");
+    QString highP = QString::number(std::ceil(currentSession->getPTimeInHigh()/currentSession->getSessionTime() * 10000) /100.0);
+    ui->pTimeHigh_label->setText(highP + "%");
+
+}
+
 void MainWindow::updateMenu(const QString selectedMenuItem, const QStringList menuItems) {
 
     activeQListWidget->clear();
@@ -833,8 +867,8 @@ void MainWindow::navigateBack() {
 }
 //Save all the current session parameters to the device
 void MainWindow::saveSessionData(){
-    //save session gathered parameters (either take from UI or have it gathering and saving every 5 seconds atutomatically)
-
+    //All the other parameters are gathering automatically in the background so only need to save the graph
+    //and the session object itself
     //save graph data
     extractGraph();
     //append current session to the device vector that will handle de-alloc
