@@ -713,7 +713,7 @@ void MainWindow::breathPacerMove(int value)
         ui->breath_pacer->setValue(ui->breath_pacer->value()+value);
         QTime endTime1 = QTime::currentTime().addSecs(1);
         while(QTime::currentTime()<endTime1){
-
+          QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
         }
 
     }// the breath out start
@@ -727,13 +727,14 @@ void MainWindow::breathPacerMove(int value)
 
             QTime endTime2 = QTime::currentTime().addSecs(1);
             while(QTime::currentTime()<endTime2){
-
-    }
+                //prevent UI from being unresponsive while in loop
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                }
     }else{// breath in satrt again
                  breathInOut = true;
 
           }
-        }
+}
 
 
 

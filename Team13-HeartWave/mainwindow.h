@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QCoreApplication>
 #include <QSpinBox>
 #include <QListWidget>
 #include <QGraphicsView>
@@ -15,6 +16,7 @@
 #include "menu.h"
 #include "device.h"
 #include "Session.h"
+
 
 
 /*
