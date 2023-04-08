@@ -74,6 +74,11 @@ private:
     const int HIGH_X = 250;
     QVector<double> excellnetHRVs; //excellent HRV vector to feed into the graph
     QVector<double> midHRVs; //okayish HRV vector to feed into the graph (has some bad HRV and some good HRV)
+    //coherene scores to feed into a session
+//    QVector<double> basicCoherences;
+//    QVector<double> goodCoherences;
+//    QVector<double> excellentCoherences;
+
 
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
@@ -86,8 +91,14 @@ private:
     void darkenCoherenceLights();
     void lightenCoherenceLights(int colorIndex);
     void saveSessionData();
+    //generate the graph data
     void generateExcellentHRV();
     void generateMidHRV();
+    //generate the various coherence scores
+    int generateBasicCoherence();
+    int generateGoodCoherence();
+    int generateExcellentCoherence();
+    void runSessionSim();
 
 private slots:
     void powerChange();

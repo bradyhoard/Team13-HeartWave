@@ -1,6 +1,13 @@
 #include "Session.h"
 
-Session::Session(int challengeLevel,const QDateTime& date): challengeLvl(challengeLevel), startTime(date){}
+Session::Session(int challengeLevel,const QDateTime& date): challengeLvl(challengeLevel), startTime(date){
+    this->pTimeLow = 0;
+    this->pTimeHigh = 0;
+    this->pTimeMed = 0;
+    this->totalCoherenceScore = 0;
+    this->achievement = 0;
+    this->length = 0;
+}
 Session::~Session(){}
 
 
@@ -8,7 +15,8 @@ Session::~Session(){}
 //getters
 int Session::getSessionTime(){return length;}
 double Session::getAchievement(){return achievement; }
-double Session::getAvgScore(){return avgCoherenceScore;}
+double Session::getAvgScore(){return (totalCoherenceScore/length);}
+double Session::getTotalScore(){return totalCoherenceScore;}
 int Session::getChallengeLvl(){return challengeLvl;}
 int Session::getPTimeInLow(){return pTimeLow;}
 int Session::getPTimeInMed(){return pTimeMed;}
@@ -25,8 +33,8 @@ void Session::setLength(int seconds){
 void Session::setAchieved(int achievement){
     this->achievement = achievement;
 }
-void Session::setScore(double avgScore){
-    avgCoherenceScore = avgScore;
+void Session::setScore(double score){
+    totalCoherenceScore = score;
 }
 void Session::setPTimeInLow(int pLow){
     pTimeLow = pLow;

@@ -18,6 +18,7 @@ public:
     int getPTimeInLow();
     int getPTimeInMed();
     int getPTimeInHigh();
+    double getTotalScore();
     QDateTime getStartTime();
     //get graph
     //get date
@@ -25,7 +26,7 @@ public:
     //setters
     void setLength(int seconds);
     void setAchieved(int achievement);
-    void setScore(double avgScore);
+    void setScore(double score);
     void setPTimeInLow(int pLow);
     void setPTimeInMed(int pMed);
     void setPTimeInHigh(int pHigh);
@@ -36,7 +37,7 @@ public:
 private:
     int length; //in seconds
     double achievement;
-    double avgCoherenceScore;
+    double totalCoherenceScore;
     int challengeLvl;
     int pTimeLow; //% time in low coherence
     int pTimeMed; //% time in med coherence

@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     //make the graph timer
     currentTimerCount = -1;
     graphTimer = new QTimer(this);
-    connect(graphTimer, &QTimer::timeout, this, &MainWindow::updateGraph);
+    connect(graphTimer, &QTimer::timeout, this, &MainWindow::runSessionSim);
 
     //create menu tree
     masterMenu = new Menu("MAIN MENU", {"START NEW SESSION","SETTINGS","HISTORY"}, nullptr);
@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //to increase the breath pacer time
     connect(ui->breath_pacer_time,SIGNAL(valueChanged(int )),this,SLOT(breathPacerTimeValueChanged(int )));
+    //TODO: connect left and right buttons to the breath pacer settings menu
 
     // device interface button connections
     connect(ui->upButton, SIGNAL(pressed()), this, SLOT(navigateUpMenu()));
@@ -281,6 +282,33 @@ void MainWindow::generateMidHRV(){
     }
 }
 
+//coherence scores range from 0 to 16
+//this way I don't have to make a giga large array and just start generating entries on program runtime
+//that will adjust the score accordingly to what the user selected
+//return a random number between 0-4 (basic)
+int MainWindow::generateBasicCoherence(){
+    srand (time(NULL));
+    //rand() % ( high - low + 1 ) + low
+    int temp = rand()%5+0;
+    return temp;
+
+}
+//return a random number between 5-11 (good/very good)
+int MainWindow::generateGoodCoherence(){
+    srand (time(NULL));
+    //rand() % ( high - low + 1 ) + low
+    int temp = rand()%7+5;
+    return temp;
+}
+//return a random number between 12-16 (excellent)
+int MainWindow::generateExcellentCoherence(){
+    srand (time(NULL));
+    //rand() % ( high - low + 1 ) + low
+    int temp = rand()%5+12;
+    return temp;
+}
+
+
 //Apply the device to user to measure his vitals
 void MainWindow::applyToSkin() {
     //get current index
@@ -331,7 +359,7 @@ void MainWindow::generateData(){
         graphTimer->stop(); //stop it to end simulation so it will not just go on forever Voja said like 1min - 1min and a half so this covers it
     }
 }
-
+//updates the graph during a session
 void MainWindow::updateGraph(){
     //generate some data & add to graph
     generateData();
@@ -339,6 +367,56 @@ void MainWindow::updateGraph(){
     ui->customPlot->replot();
 }
 
+//main function called when a session is active
+//it updates the graph, UI componenets, lights, and session
+//with the appropriate data as it comes in.
+void MainWindow::runSessionSim(){
+    QString coherenceLevel = ui->coherenceVal_Box->currentText();
+    //update graph
+    updateGraph(); //<--- decouple lights from generateData()
+    //update lights
+
+    //UPDATE SESSION VARIABLES
+    //generate coherence value depending on what is the selected coherence by user & keep track of time spent at each of the modes
+    int coherenceScore;
+    if(coherenceLevel == "Poor"){
+        coherenceScore = generateBasicCoherence();
+        currentSession->setPTimeInLow(currentSession->getPTimeInLow() + 1);
+
+    }
+    else if (coherenceLevel == "Good"){
+        coherenceScore = generateGoodCoherence();
+        currentSession->setPTimeInMed(currentSession->getPTimeInMed() + 1);
+
+    }
+    else{
+        coherenceScore = generateExcellentCoherence();
+        currentSession->setPTimeInHigh(currentSession->getPTimeInHigh() + 1);
+
+    }
+    //update achievment score
+    currentSession->setAchieved(currentSession->getAchievement() + coherenceScore);
+    //update total score <-- needs more work on due to the 64 seconds thingy
+    currentSession->setScore(currentSession->getTotalScore() + coherenceScore);
+    //update the time
+    currentSession->setLength(currentTimerCount);
+
+    //UPDATE UI
+    //update the time time every second
+    QString time = QString::number(currentTimerCount);
+    ui->lengthLabel->setText(time);
+
+    //update coherence score and achievment every 5 seconds
+    if((int)currentTimerCount % 5 == 0){
+                                    //achievement lvl
+        QString achievmentScore = QString::number(currentSession->getAchievement());
+                                    //coherence avg over the last 5 seconds
+        QString coherenceScore = QString::number(currentSession->getTotalScore()/currentSession->getSessionTime());
+        ui->coherenceLabel->setText(coherenceScore);
+        ui->achievmentLabel->setText(achievmentScore);
+    }
+
+}
 
 //Extracts all the points X (keys) and Y (values) from the graph and saves them
 //to the session vectors that hold all points X and Y recorded by the device to be displayed later
@@ -463,7 +541,6 @@ void MainWindow::lightenCoherenceLights(int colorIndex){
             colors.replace(1, darkerColor);
         }
     }
-
     update();
 
 
@@ -515,11 +592,6 @@ void MainWindow::changePowerStatus() {
     ui->menuLabel->setVisible(powerStatus);
     ui->batteryProgress->setVisible(powerStatus);
     ui->chargeDevice->setVisible(powerStatus);
-    //Currently if turning device off during a session just hide components and thats it.
-//    ui->summaryWidget->setVisible(false);
-//    ui->parametersViewWidget->setVisible(false);
-//    ui->customPlot->setVisible(false);
-//    ui->ballPacerWidget->setVisible(false);
     ui->powerOffView->setVisible(!powerStatus);
     ui->upButton->setEnabled(powerStatus);
     ui->downButton->setEnabled(powerStatus);
@@ -536,7 +608,7 @@ void MainWindow::changePowerStatus() {
 void MainWindow::initializeMainMenu(Menu* m) {
 
     Menu* session = new Menu("START NEW SESSION", {}, m);
-    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE"}, m);
+    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE","BREATH PACER"}, m);
     Menu* history = new Menu("HISTORY", {"VIEW"}, m);
 
     m->addChildMenu(session);
@@ -545,7 +617,7 @@ void MainWindow::initializeMainMenu(Menu* m) {
 
     Menu* viewHistory = new Menu("VIEW",{}, history);
     Menu* clearDevice = new Menu("RESET DEVICE", {"YES","NO"}, settings);
-    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Begginer","Adept","Intermediate","Advanced"},settings);
+    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Beginer","Adept","Intermediate","Advanced"},settings);
 
     history->addChildMenu(viewHistory);
     settings->addChildMenu(challengeLvls);
@@ -790,7 +862,7 @@ void MainWindow::breathPacerMove(int value)
         ui->breath_pacer->setValue(ui->breath_pacer->value()+value);
         QTime endTime1 = QTime::currentTime().addSecs(1);
         while(QTime::currentTime()<endTime1){
-        //QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
         }
 
     }// the breath out start
@@ -804,8 +876,8 @@ void MainWindow::breathPacerMove(int value)
 
             QTime endTime2 = QTime::currentTime().addSecs(1);
             while(QTime::currentTime()<endTime2){
-            //QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
-    }
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
+            }
     }else{// breath in satrt again
                  breathInOut = true;
 
