@@ -71,7 +71,9 @@ private:
     const int LOW_Y = 38;
     const int HIGH_Y = 110;
     const int LOW_X = 0;
-    const int HIGH_X = 200;
+    const int HIGH_X = 250;
+    QVector<double> excellnetHRVs; //excellent HRV vector to feed into the graph
+    QVector<double> midHRVs; //okayish HRV vector to feed into the graph (has some bad HRV and some good HRV)
 
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
@@ -84,6 +86,8 @@ private:
     void darkenCoherenceLights();
     void lightenCoherenceLights(int colorIndex);
     void saveSessionData();
+    void generateExcellentHRV();
+    void generateMidHRV();
 
 private slots:
     void powerChange();
@@ -94,13 +98,8 @@ private slots:
     void navigateBack();
     void lowerBattery(Device*); //update the battery display on the screen based on the device battey status
     void applyToSkin();
-
-
-
-
-
-
     void breathPacerTimeValueChanged(int arg1);
     void breathPacerMove(int value);
+
 };
 #endif // MAINWINDOW_H

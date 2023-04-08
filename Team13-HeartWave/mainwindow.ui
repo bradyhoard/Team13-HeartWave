@@ -605,8 +605,8 @@ color: rgb(255, 255, 255);</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>380</y>
+      <x>470</x>
+      <y>270</y>
       <width>216</width>
       <height>28</height>
      </rect>
@@ -637,8 +637,8 @@ color: rgb(255, 255, 255);</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>440</y>
+      <x>460</x>
+      <y>330</y>
       <width>239</width>
       <height>27</height>
      </rect>
@@ -659,8 +659,8 @@ color: rgb(255, 255, 255);</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>570</y>
+      <x>490</x>
+      <y>410</y>
       <width>174</width>
       <height>27</height>
      </rect>
@@ -678,13 +678,13 @@ color: rgb(255, 255, 255);</string>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="ballPacerPlaceHold" native="true">
+   <widget class="QWidget" name="ballPacerWidget" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>410</y>
+      <y>390</y>
       <width>341</width>
-      <height>81</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -959,7 +959,6 @@ color: rgb(255, 255, 255);</string>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
-   <zorder>powerOffView</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
    <zorder>downButton</zorder>
@@ -973,9 +972,10 @@ color: rgb(255, 255, 255);</string>
    <zorder>batteryProgress</zorder>
    <zorder>menuFrame</zorder>
    <zorder>parametersViewWidget</zorder>
-   <zorder>ballPacerPlaceHold</zorder>
+   <zorder>ballPacerWidget</zorder>
    <zorder>customPlot</zorder>
    <zorder>summaryWidget</zorder>
+   <zorder>powerOffView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

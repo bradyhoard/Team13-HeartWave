@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     //hide new session menu
     ui->customPlot->setVisible(powerStatus);
     ui->parametersViewWidget->setVisible(powerStatus);
-    ui->ballPacerPlaceHold->setVisible(powerStatus);
+    ui->ballPacerWidget->setVisible(powerStatus);
     ui->breath_pacer->setTextVisible(powerStatus);
     changePowerStatus();
     connect(ui->powerButton, SIGNAL(pressed()), this, SLOT(powerChange()));
@@ -64,7 +64,6 @@ MainWindow::MainWindow(QWidget *parent)
     batteryTimer->start(5000);
 
 
-    //TODO: RIGHT & LEFT BUTTONS
     //to increase the breath pacer time
     connect(ui->breath_pacer_time,SIGNAL(valueChanged(int )),this,SLOT(breathPacerTimeValueChanged(int )));
 
@@ -138,6 +137,11 @@ MainWindow::MainWindow(QWidget *parent)
     // breath in / out variable
     breathInOut = true;
 
+   //set up the coherence and HRV data to be read in by the graph.
+    generateExcellentHRV();
+
+    generateMidHRV();
+
 }
 
 
@@ -169,8 +173,113 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//Generate sin like points and store them in a vector to be read in by the graph
+void MainWindow::generateExcellentHRV(){
+    //generate 250 seconds of sin like values into the graph
+    for(double i = 65; i <= 75; i++){
+        excellnetHRVs.append(i);
+    }
+    excellnetHRVs.append(76);
+    excellnetHRVs.append(76);
+    excellnetHRVs.append(76);
+    excellnetHRVs.append(75);
+    excellnetHRVs.append(75);
+    for(double i = 74; i >= 60; i--){
+        excellnetHRVs.append(i);
+    }
+    excellnetHRVs.append(59);
+    excellnetHRVs.append(59);
+    excellnetHRVs.append(59);
+    excellnetHRVs.append(60);
+    excellnetHRVs.append(60);
+    for(double i = 61; i <= 80; i++){
+        excellnetHRVs.append(i);
+    }
+    excellnetHRVs.append(81);
+    excellnetHRVs.append(81);
+    excellnetHRVs.append(81);
+    excellnetHRVs.append(80);
+    excellnetHRVs.append(80);
+    for(double i = 79; i >= 65; i--){
+        excellnetHRVs.append(i);
+    }
+    excellnetHRVs.append(64);
+    excellnetHRVs.append(64);
+    excellnetHRVs.append(64);
+    excellnetHRVs.append(65);
+    //then simply iterate over the vector again and append these values
+    QVector<double> extraHRV = excellnetHRVs;
+    for(int i=0; i < extraHRV.length(); i++){
+        excellnetHRVs.append(extraHRV[i]);
+    }
+    extraHRV = excellnetHRVs;
+    for(int i=0; i < extraHRV.length(); i++){
+        excellnetHRVs.append(extraHRV[i]);
+    }
+    extraHRV = excellnetHRVs;
+    for(int i=0; i < extraHRV.length(); i++){
+        excellnetHRVs.append(extraHRV[i]);
+    }
+}
 
-
+//Generate half-sin kinda jagged like points and store them in a vector to be read in by the graph
+void MainWindow::generateMidHRV(){
+    //sharp mountains
+    for(double i = 50; i <= 65; i++){
+        midHRVs.append(i);
+    }
+    for(double i = 66; i >= 60; i--){
+        midHRVs.append(i);
+    }
+    for(double i = 50; i <= 65; i++){
+        midHRVs.append(i);
+    }
+    for(double i = 66; i >= 60; i--){
+        midHRVs.append(i);
+    }
+    for(double i = 59; i <= 70; i++){
+        midHRVs.append(i);
+    }
+    //sin dip and peak
+    for(double i = 65; i <= 75; i++){
+        midHRVs.append(i);
+    }
+    midHRVs.append(76);
+    midHRVs.append(76);
+    midHRVs.append(76);
+    midHRVs.append(75);
+    midHRVs.append(75);
+    for(double i = 74; i >= 60; i--){
+        midHRVs.append(i);
+    }
+    midHRVs.append(59);
+    midHRVs.append(59);
+    midHRVs.append(59);
+    midHRVs.append(60);
+    midHRVs.append(60);
+    for(double i = 61; i <= 80; i++){
+        midHRVs.append(i);
+    }
+    midHRVs.append(81);
+    midHRVs.append(81);
+    midHRVs.append(81);
+    midHRVs.append(80);
+    midHRVs.append(80);
+    midHRVs.append(100);
+    for(double i = 100; i >= 75; i--){
+        midHRVs.append(i);
+    }
+    for(double i = 76; i >= 60; i--){
+        midHRVs.append(i);
+    }
+    for(double i = 59; i <= 70; i++){
+        midHRVs.append(i);
+    }
+    QVector<double> extraHRV = midHRVs;
+    for(int i=0; i < extraHRV.length(); i++){
+        midHRVs.append(extraHRV[i]);
+    }
+}
 
 //Apply the device to user to measure his vitals
 void MainWindow::applyToSkin() {
@@ -190,34 +299,33 @@ void MainWindow::applyToSkin() {
 
 }
 
-
+//generates the graph data and updates the lights depending on the combo box value
 void MainWindow::generateData(){
-    //generate number between 40-100 put it on y
-    srand (time(NULL));
-    int temp = rand()%61+40;                //needs to be double
-    ui->customPlot->graph(0)->addData(currentTimerCount,(double)temp);
-    if(currentTimerCount > 200){
-        graphTimer->stop(); //end session primarly for testing will move over to a diff spot later
-    }
-    currentTimerCount+= 1;//timer is every 1 seconds so plot every 1
-
     QString coherenceLevel = ui->coherenceVal_Box->currentText();
+    srand (time(NULL));
+    if(coherenceLevel == "Poor"){
+         lightenCoherenceLights(0); //set light to red
+         //generate bad incoherent data by random on graph
+         //generate number between 40-100 put it on y
+         int temp = rand()%61+40;                //needs to be double
+         ui->customPlot->graph(0)->addData(currentTimerCount,(double)temp);
 
-    //red
-    if (coherenceLevel == "Poor"){
-         lightenCoherenceLights(0);
     }
-
-    //blue
     else if (coherenceLevel == "Good"){
-         lightenCoherenceLights(1);
+         lightenCoherenceLights(1);  //blue
+         //use generated jagged like data
+          ui->customPlot->graph(0)->addData(currentTimerCount,midHRVs[currentTimerCount]);
     }
-
-    //green
     else{
-         lightenCoherenceLights(2);
-    }
+         lightenCoherenceLights(2); //green
+         //use generated sin like data to graph
+         ui->customPlot->graph(0)->addData(currentTimerCount,excellnetHRVs[currentTimerCount]);
 
+    }
+    currentTimerCount+= 1; //timer is every 1 seconds so plot every 1
+    if(currentTimerCount > 248){
+        graphTimer->stop(); //stop it to end simulation so it will not just go on forever Voja said like 1min - 1min and a half so this covers it
+    }
 }
 
 void MainWindow::updateGraph(){
@@ -237,10 +345,8 @@ void MainWindow::extractGraph(){
     for (int i = 0 ; i < plotData->size() ; ++i) {
          double lastKey = plotData->at(i)->key;
          double lastValue = plotData->at(i)->value;
-         qDebug () << "X:" << i << lastKey;
-         qDebug () << "Y:" << i << lastValue;
-        currentSession->addPointX(lastKey);
-        currentSession->addPointY(lastValue);
+         currentSession->addPointX(lastKey);
+         currentSession->addPointY(lastValue);
     }
 }
 
@@ -393,6 +499,10 @@ void MainWindow::powerChange(){
         }else{
             powerStatus = true;
     }
+    if(currentTimerCount != -1){ //session in progress
+        darkenCoherenceLights();
+        navigateToMainMenu(); //return user to main menu can't just log in back to the same session
+    }
     changePowerStatus();
 }
 
@@ -402,10 +512,11 @@ void MainWindow::changePowerStatus() {
     ui->batteryProgress->setVisible(powerStatus);
     ui->chargeDevice->setVisible(powerStatus);
     //Currently if turning device off during a session just hide components and thats it.
-    ui->summaryWidget->setVisible(false);
-    ui->parametersViewWidget->setVisible(false);
-    ui->customPlot->setVisible(false);
-    ui->breath_pacer->setVisible(false);
+//    ui->summaryWidget->setVisible(false);
+//    ui->parametersViewWidget->setVisible(false);
+//    ui->customPlot->setVisible(false);
+//    ui->ballPacerWidget->setVisible(false);
+    ui->powerOffView->setVisible(!powerStatus);
     ui->upButton->setEnabled(powerStatus);
     ui->downButton->setEnabled(powerStatus);
     ui->leftButton->setEnabled(powerStatus);
@@ -415,40 +526,26 @@ void MainWindow::changePowerStatus() {
     ui->backButton->setEnabled(powerStatus);
     ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
+
 }
 
 void MainWindow::initializeMainMenu(Menu* m) {
 
-//    QStringList programsList;
-
-
-//    for (Therapy* p : this->programs) {
-//        programsList.append(p->getName());
-//    }
-
-
     Menu* session = new Menu("START NEW SESSION", {}, m);
-    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE","BREATH PACER"}, m);
+    Menu* settings = new Menu("SETTINGS", {"CHALLENGE LEVEL","RESET DEVICE"}, m);
     Menu* history = new Menu("HISTORY", {"VIEW"}, m);
 
     m->addChildMenu(session);
     m->addChildMenu(settings);
     m->addChildMenu(history);
 
-
-//    for (Therapy* p : this->programs) {
-//        programs->addChildMenu(new Menu(p->getName(), {}, programs));
-//    }
-
     Menu* viewHistory = new Menu("VIEW",{}, history);
     Menu* clearDevice = new Menu("RESET DEVICE", {"YES","NO"}, settings);
-    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"1","2","3","4"},settings);
-
+    Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Begginer","Adept","Intermediate","Advanced"},settings);
 
     history->addChildMenu(viewHistory);
     settings->addChildMenu(challengeLvls);
     settings->addChildMenu(clearDevice);
-     //TODO: Breath Pacer child menu selector that is controlled with the side arrows
 }
 
 
@@ -506,8 +603,6 @@ void MainWindow::navigateSubMenu() {
         }
     }
 
-    //TODO: Logic for when the menu is the settings breath pacer menu (arrow keys and stuff)
-
 
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
@@ -521,7 +616,7 @@ void MainWindow::navigateSubMenu() {
     }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
     else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
         ui->summaryWidget->setVisible(true); //show extra summary info
-        ui->ballPacerPlaceHold->setVisible(false);//hide the breath paser
+        ui->ballPacerWidget->setVisible(false);//hide the breath paser
         int minRecordingTime = 5;
         if (currentTimerCount >= minRecordingTime) {
             //Save session here as well
@@ -535,7 +630,7 @@ void MainWindow::navigateSubMenu() {
     //If the button pressed should display the device's recordings.
     else if (masterMenu->get(index)->getName() == "VIEW") {
         masterMenu = masterMenu->get(index);
-        //MainWindow::updateMenu("RECORDINGS", allRecordings); <-- TODO: display recording modify
+        //MainWindow::updateMenu("RECORDINGS", allRecordings); //<-- TODO: display recording modify
     }
 
 }
@@ -555,33 +650,30 @@ void MainWindow::beginSession(){
     graphTimer->start(1000);
     ui->customPlot->setVisible(true);
     ui->parametersViewWidget->setVisible(true);
-    ui->ballPacerPlaceHold->setVisible(true);
+    ui->ballPacerWidget->setVisible(true);
     ui->breath_pacer->setVisible(true);
     //Make new session object
     Session* s = new Session(device->getChallengeLevel(),QDateTime::currentDateTime());
     //Set it as the current session
     currentSession = s;
     //Call functions tied to timer that update UI parameters and later will be extracted to save a session.
+
     //start the breath pacer
     ui->breath_pacer->setRange(0,30);
     ui->breath_pacer->setMinimum(0);
     ui->breath_pacer->setMaximum(device->getBreathPacer());
     ui->breath_pacer->setTextVisible(false);
     ui->breath_pacer->setValue(1);
-
-
     connect(breathTimer, &QTimer::timeout, this, [=]() {
-
         breathPacerMove(1);
+    }
 
-        }
+
   );
 
     // every 1 seconds the function above will be called
 
     breathTimer->start(1000);
-
-
 
 }
 
@@ -593,25 +685,6 @@ void MainWindow::navigateToMainMenu() {
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
         saveSessionData();
- //        if (masterMenu->getParent()->getName() == "PROGRAMS") {
-//            recordings.last()->setDuration((currentTherapy->getTime())-currentTimerCount);
-//            recordings.last()->setPowerLevel(maxPowerLevel);
-//            db->addTherapyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
-//        }
-//        else {
-//            recordings.last()->setDuration(currentTimerCount);
-//            recordings.last()->setPowerLevel(maxPowerLevel);
-//            db->addFrequencyRecord(recordings.last()->getTreatment(),recordings.last()->getStartTime(),recordings.last()->getPowerLevel(),recordings.last()->getDuration());
-//        }
-
-//        allRecordings += recordings.last()->toString();
-
-//        //End therapy
-//        currentTimerCount = -1;
-//        currentTherapy->getTimer()->stop();
-//        currentTherapy->getTimer()->disconnect();
-//        currentTherapy = nullptr;
-
     }
     //If even a non-valid session was started clean up the UI screen
     if(currentTimerCount != -1){
@@ -638,7 +711,7 @@ void MainWindow::cleanAfterSession(){
 
     ui->customPlot->setVisible(false);
     ui->parametersViewWidget->setVisible(false);
-    ui->ballPacerPlaceHold->setVisible(false);
+    ui->ballPacerWidget->setVisible(false);
     ui->summaryWidget->setVisible(false);
     ui->breath_pacer->setVisible(false);
     //adjust timer
@@ -713,7 +786,7 @@ void MainWindow::breathPacerMove(int value)
         ui->breath_pacer->setValue(ui->breath_pacer->value()+value);
         QTime endTime1 = QTime::currentTime().addSecs(1);
         while(QTime::currentTime()<endTime1){
-
+        //QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
         }
 
     }// the breath out start
@@ -727,7 +800,7 @@ void MainWindow::breathPacerMove(int value)
 
             QTime endTime2 = QTime::currentTime().addSecs(1);
             while(QTime::currentTime()<endTime2){
-
+            //QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
     }
     }else{// breath in satrt again
                  breathInOut = true;
