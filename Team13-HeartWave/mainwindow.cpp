@@ -294,9 +294,13 @@ void MainWindow::applyToSkin() {
    else{
       onSkin = false;
    }
-    //update the QPixMap
-    ui->heartPicLabel->setPixmap(QPixmap(onSkin ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
 
+   //update the QPixMap
+    ui->heartPicLabel->setPixmap(QPixmap(onSkin ? ":/buttons/heart-ON.svg" : ":/buttons/heart-OFF.svg"));
+    if(currentTimerCount != -1){ //if a session is active
+        //it will have to be ended cuz no more way to read data so same functionaliy as pressing the ok button to end the session a summary view will show
+        navigateSubMenu();
+    }
 }
 
 //generates the graph data and updates the lights depending on the combo box value
