@@ -959,10 +959,10 @@ color: rgb(255, 255, 255);</string>
    <widget class="QCustomPlot" name="sessionPlot" native="true">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>60</y>
-      <width>271</width>
-      <height>151</height>
+      <x>70</x>
+      <y>180</y>
+      <width>321</width>
+      <height>221</height>
      </rect>
     </property>
    </widget>
@@ -985,8 +985,8 @@ color: rgb(255, 255, 255);</string>
    <zorder>ballPacerWidget</zorder>
    <zorder>customPlot</zorder>
    <zorder>summaryWidget</zorder>
-   <zorder>powerOffView</zorder>
    <zorder>sessionPlot</zorder>
+   <zorder>powerOffView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

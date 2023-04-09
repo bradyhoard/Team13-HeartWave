@@ -141,6 +141,8 @@ MainWindow::MainWindow(QWidget *parent)
      //hide session summary view on load
     ui->summaryWidget->setVisible(powerStatus);
 
+    ui->sessionPlot->setVisible(false);
+
     this->update();
     // time for breath pacer movment
 
@@ -623,7 +625,6 @@ void MainWindow::changePowerStatus() {
     ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
 
-    ui->sessionPlot->setVisible(powerStatus);
 
 }
 
@@ -672,6 +673,7 @@ void MainWindow::navigateDownMenu() {
 }
 
 void MainWindow::showSessionGraph(int index){
+     activeQListWidget->clear(); //clear menu
     //get a session
     Session* s;
     device->getSession(index, &s);
@@ -682,6 +684,7 @@ void MainWindow::showSessionGraph(int index){
         // pass data points to graphs:
         ui->sessionPlot->graph(0)->setData(x, y); //put the data in
         ui->sessionPlot->replot();//update
+        ui->sessionPlot->setVisible(true);
     }
 }
 
@@ -694,7 +697,7 @@ void MainWindow::navigateSubMenu() {
         return;
     } //nav to graph
     if (masterMenu->getName() == "VIEW") {
-        //do graph
+        //show the session graph corresponding to the index
         showSessionGraph(index);
         ui->menuLabel->setText("SESSION");
         return;
@@ -710,6 +713,7 @@ void MainWindow::navigateSubMenu() {
     if(masterMenu->getName() == "RESET DEVICE"){
         if (masterMenu->getMenuItems()[index] == "YES") {
               currentSession = NULL;
+              allSessions.clear();
               device->resetSettings();
               navigateBack();
               return;
@@ -818,6 +822,7 @@ void MainWindow::beginSession(){
 void MainWindow::navigateToMainMenu() {
     ui->sessionPlot->graph()->data()->clear();
     ui->sessionPlot->replot();
+    ui->sessionPlot->setVisible(false);
     int minRecordingTime = 5;
     //in case of valid session save progress first before clean up
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
@@ -875,6 +880,7 @@ void MainWindow::cleanAfterSession(){
 void MainWindow::navigateBack() {
     ui->sessionPlot->graph()->data()->clear();
     ui->sessionPlot->replot();
+    ui->sessionPlot->setVisible(false);
     int minRecordingTime = 5;
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
