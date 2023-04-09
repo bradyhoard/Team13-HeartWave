@@ -10,11 +10,13 @@ class Session{
 public:
     Session(int challengeLevel, const QDateTime& date);
     ~Session();
+
+    QString toString();
     //getters
     int getSessionTime();
     double getAchievement();
     double getAvgScore();
-    int getChallengeLvl();
+    QString getChallengeLvl();
     double getPTimeInLow();
     double getPTimeInMed();
     double getPTimeInHigh();
@@ -33,6 +35,7 @@ public:
     //save graph data for x and y
     void addPointX(double point);
     void addPointY(double point);
+
 
 private:
     int length; //in seconds

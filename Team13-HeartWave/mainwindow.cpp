@@ -394,6 +394,16 @@ void MainWindow::runSessionSim(){
         currentSession->setPTimeInHigh(currentSession->getPTimeInHigh() + 1);
 
     }
+    //TODO: PROPER COHERENCE SCORE
+    /*  The scoring algorithm continuously
+        monitors the most current 64 seconds of heart rhythm data and updates the score every 5
+        seconds.
+     */
+    /*
+        The scoring algorithm updates your Coherence Score every 5 seconds during an active session and adds them together giving
+        you a sum which is called Achievement on the app displays.
+    */
+
     //update achievment score
     currentSession->setAchieved(currentSession->getAchievement() + coherenceScore);
     //update total score <-- needs more work on due to the 64 seconds thingy
@@ -622,6 +632,7 @@ void MainWindow::initializeMainMenu(Menu* m) {
     history->addChildMenu(viewHistory);
     settings->addChildMenu(challengeLvls);
     settings->addChildMenu(clearDevice);
+
 }
 
 
@@ -654,7 +665,8 @@ void MainWindow::navigateSubMenu() {
     int index = activeQListWidget->currentRow();
     if (index < 0) return;
 
-    // Prevent crash if ok button is selected in view
+    // Prevent crash if ok button is selected in view CHANGE THIS TO THE GRAPH MENU
+    //if view need to get index and display the graph
     if (masterMenu->getName() == "VIEW") {
         return;
     }
@@ -679,14 +691,14 @@ void MainWindow::navigateSubMenu() {
         }
     }
 
-
+    //qInfo() << masterMenu->get(index)->getName();
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
         masterMenu = masterMenu->get(index);
         MainWindow::updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
     }
     //If the menu is has no items and the timer is not started -> it should start a session
-    else if (masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
+    else if (masterMenu->get(index)->getName() != "VIEW" && masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
         beginSession();
 
     }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
@@ -710,7 +722,7 @@ void MainWindow::navigateSubMenu() {
     //If the button pressed should display the device's recordings.
     else if (masterMenu->get(index)->getName() == "VIEW") {
         masterMenu = masterMenu->get(index);
-        //MainWindow::updateMenu("RECORDINGS", allRecordings); //<-- TODO: display recording modify
+        MainWindow::updateMenu("SESSIONS", allSessions);
     }
 
 }
@@ -721,19 +733,7 @@ void MainWindow::updateSummaryScreen(){
     //update coherence to the last coherence
     QString avgCoh = QString::number(std::ceil(currentSession->getAvgScore() * 100) / 100.0);
     ui->avgCoherence_label->setText(avgCoh);
-    switch(currentSession->getChallengeLvl()){
-        case 2:
-            ui->challengeLvl_label->setText("Adept");
-            break;
-        case 3:
-            ui->challengeLvl_label->setText("Intermediate");
-            break;
-        case 4:
-            ui->challengeLvl_label->setText("Advanced");
-            break;
-        default:
-            ui->challengeLvl_label->setText("Beginner");
-    }
+    ui->challengeLvl_label->setText(currentSession->getChallengeLvl());
     //calc %time in each level
     QString lowP = QString::number(std::ceil(currentSession->getPTimeInLow()/currentSession->getSessionTime() * 10000) /100.0);
     ui->pTimeLow_label->setText(lowP + "%");
@@ -869,6 +869,9 @@ void MainWindow::navigateBack() {
 void MainWindow::saveSessionData(){
     //All the other parameters are gathering automatically in the background so only need to save the graph
     //and the session object itself
+    //add it to the list of string of current session to display in history
+    allSessions += currentSession->toString();
+
     //save graph data
     extractGraph();
     //append current session to the device vector that will handle de-alloc
@@ -912,7 +915,7 @@ void MainWindow::breathPacerMove(int value)
             while(QTime::currentTime()<endTime2){
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100); //prevent UI from being unresponsive while in loop
             }
-    }else{// breath in satrt again
+    }else{// breath in start again
                  breathInOut = true;
 
           }

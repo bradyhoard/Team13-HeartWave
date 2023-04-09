@@ -49,7 +49,7 @@ private:
     Device *device; //User device
     Session *currentSession; //current recorded session to the device
 
-    bool onSkin;//might not need came from DENAS
+    bool onSkin; //is device attached to user
 
     QListWidget *activeQListWidget;
     bool powerStatus;
@@ -61,6 +61,7 @@ private:
 
     QTimer* batteryTimer;
 
+    //breath pacer variables
     QTimer* breathTimer;
 
     bool breathInOut;
@@ -74,23 +75,25 @@ private:
     const int HIGH_X = 250;
     QVector<double> excellnetHRVs; //excellent HRV vector to feed into the graph
     QVector<double> midHRVs; //okayish HRV vector to feed into the graph (has some bad HRV and some good HRV)
-    //coherene scores to feed into a session
+
+//coherene scores to feed into a session
 //    QVector<double> basicCoherences;
 //    QVector<double> goodCoherences;
 //    QVector<double> excellentCoherences;
 
+    QStringList allSessions; //list to store all the current sessions as strings
 
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
     void changePowerStatus();
-    void generateData(); //will use for now to simulate data being "captured" by the device from user
+    void generateData(); //generates bad HRV score to feed into the graph that is all over the place
     void updateGraph(); //update a graph x ticks of time
     void extractGraph();
-    void beginSession();
+    void beginSession(); //intiazlie a session
     void cleanAfterSession();
     void darkenCoherenceLights();
     void lightenCoherenceLights(int colorIndex);
-    void saveSessionData();
+    void saveSessionData(); //save session to device
     //generate the graph data
     void generateExcellentHRV();
     void generateMidHRV();
@@ -98,8 +101,8 @@ private:
     int generateBasicCoherence();
     int generateGoodCoherence();
     int generateExcellentCoherence();
-    void runSessionSim();
-    void updateSummaryScreen();
+    void runSessionSim(); //run the session simulation
+    void updateSummaryScreen(); //update UI summary screen on succesful session end by user
 
 private slots:
     void powerChange();
