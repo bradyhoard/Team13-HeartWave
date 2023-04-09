@@ -956,6 +956,16 @@ color: rgb(255, 255, 255);</string>
     <zorder>pTimeHigh_label</zorder>
     <zorder>label_15</zorder>
    </widget>
+   <widget class="QCustomPlot" name="sessionPlot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>60</y>
+      <width>271</width>
+      <height>151</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -976,6 +986,7 @@ color: rgb(255, 255, 255);</string>
    <zorder>customPlot</zorder>
    <zorder>summaryWidget</zorder>
    <zorder>powerOffView</zorder>
+   <zorder>sessionPlot</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

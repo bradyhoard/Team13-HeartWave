@@ -53,7 +53,8 @@ double Session::getPTimeInLow(){return pTimeLow;}
 double Session::getPTimeInMed(){return pTimeMed;}
 double Session::getPTimeInHigh(){return pTimeHigh;}
 QDateTime Session::getStartTime() { return startTime; }
-
+QVector<double> Session::getXvector(){return graphXvalues; }
+QVector<double> Session::getYvector(){return graphYvalues; }
 //get graph
 //get date
 

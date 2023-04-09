@@ -23,7 +23,10 @@
         1. Make sure to run the command: sudo apt-get install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev
         and see that the libraries are up to date or the graph feature will simply not work.
 
+            1.1 Also consider adding more memory to the VM if building freezes or is really slow
+
         2. Building the project takes around 1 minute on my VM due to the graph files size so give it some time.
+
 */
 
 QT_BEGIN_NAMESPACE
@@ -103,7 +106,7 @@ private:
     int generateExcellentCoherence();
     void runSessionSim(); //run the session simulation
     void updateSummaryScreen(); //update UI summary screen on succesful session end by user
-
+    void showSessionGraph(int index);
 private slots:
     void powerChange();
     void navigateDownMenu();

@@ -21,9 +21,11 @@ public:
     double getPTimeInMed();
     double getPTimeInHigh();
     double getTotalScore();
+
     QDateTime getStartTime();
     //get graph
-    //get date
+    QVector<double> getXvector();
+    QVector<double> getYvector();
 
     //setters
     void setLength(int seconds);

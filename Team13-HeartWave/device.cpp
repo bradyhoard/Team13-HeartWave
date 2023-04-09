@@ -48,3 +48,11 @@ void Device::resetSettings(){
 void Device::addSession(Session* s){
     sessions.append(s);
 }
+
+void Device::getSession(int index, Session** s){
+    if(index >= 0 && index < sessions.length()){
+        *s = sessions[index];
+        return;
+    }
+    *s = NULL;
+}

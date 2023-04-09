@@ -106,22 +106,32 @@ MainWindow::MainWindow(QWidget *parent)
     // add new graph and set their look:
     ui->customPlot->addGraph();
     ui->customPlot->graph(0)->setPen(QPen(Qt::blue)); // line color blue for first graph
+    //session graph
+    ui->sessionPlot->addGraph();
+    ui->sessionPlot->graph(0)->setPen(QPen(Qt::red)); // line color black since its in the past
 
     //set text on y&x axis
     ui->customPlot->yAxis->setLabel("Heart Rate");
     ui->customPlot->xAxis->setLabel("Time (seconds)");
+    ui->sessionPlot->yAxis->setLabel("Heart Rate");
+    ui->sessionPlot->xAxis->setLabel("Time (seconds)");
 
     // make left and bottom axes always transfer their ranges to right and top axes:
     connect(ui->customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->xAxis2, SLOT(setRange(QCPRange)));
     connect(ui->customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->yAxis2, SLOT(setRange(QCPRange)));
+    connect(ui->sessionPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->sessionPlot->xAxis2, SLOT(setRange(QCPRange)));
+    connect(ui->sessionPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->sessionPlot->yAxis2, SLOT(setRange(QCPRange)));
     // let the ranges scale themselves so graph 0 fits perfectly in the visible area:
     ui->customPlot->graph(0)->rescaleAxes();
+    ui->sessionPlot->graph(0)->rescaleAxes();
     // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select graphs by clicking:
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-
+    ui->sessionPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
     //set ranges on x & y axis
     ui->customPlot->yAxis->setRange(LOW_Y,HIGH_Y);
     ui->customPlot->xAxis->setRange(LOW_X,HIGH_X);
+    ui->sessionPlot->yAxis->setRange(LOW_Y,HIGH_Y);
+    ui->sessionPlot->xAxis->setRange(LOW_X,HIGH_X);
 
     //set up the coherence level box so user can select vals from it
     ui->coherenceVal_Box->addItem("Poor");
@@ -613,6 +623,8 @@ void MainWindow::changePowerStatus() {
     ui->menuFrame->setVisible(powerStatus);
     ui->heartPicLabel->setEnabled(powerStatus);
 
+    ui->sessionPlot->setVisible(powerStatus);
+
 }
 
 void MainWindow::initializeMainMenu(Menu* m) {
@@ -659,15 +671,32 @@ void MainWindow::navigateDownMenu() {
     activeQListWidget->setCurrentRow(nextIndex);
 }
 
+void MainWindow::showSessionGraph(int index){
+    //get a session
+    Session* s;
+    device->getSession(index, &s);
+    if(s != NULL){
+        //make const set data only takes const
+        const QVector<double> x = s->getXvector();
+        const QVector<double> y = s->getYvector();
+        // pass data points to graphs:
+        ui->sessionPlot->graph(0)->setData(x, y); //put the data in
+        ui->sessionPlot->replot();//update
+    }
+}
 
 void MainWindow::navigateSubMenu() {
-
     int index = activeQListWidget->currentRow();
     if (index < 0) return;
 
-    // Prevent crash if ok button is selected in view CHANGE THIS TO THE GRAPH MENU
-    //if view need to get index and display the graph
+    // Prevent crash if ok button is selected in a specific session
+    if (masterMenu->getName() == "SESSIONS") {
+        return;
+    } //nav to graph
     if (masterMenu->getName() == "VIEW") {
+        //do graph
+        showSessionGraph(index);
+        ui->menuLabel->setText("SESSION");
         return;
     }
 
@@ -690,7 +719,6 @@ void MainWindow::navigateSubMenu() {
             return;
         }
     }
-
     //qInfo() << masterMenu->get(index)->getName();
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
@@ -700,7 +728,6 @@ void MainWindow::navigateSubMenu() {
     //If the menu is has no items and the timer is not started -> it should start a session
     else if (masterMenu->get(index)->getName() != "VIEW" && masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount == -1) {
         beginSession();
-
     }//If the menu is has no items BUT current timer is started it means session is in progress and user wants to stop it.
     else if(masterMenu->get(index)->getMenuItems().length() == 0 && currentTimerCount != -1){
         ui->summaryWidget->setVisible(true); //show extra summary info
@@ -789,7 +816,8 @@ void MainWindow::beginSession(){
 
 
 void MainWindow::navigateToMainMenu() {
-//TODO: Properly save the recording
+    ui->sessionPlot->graph()->data()->clear();
+    ui->sessionPlot->replot();
     int minRecordingTime = 5;
     //in case of valid session save progress first before clean up
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
@@ -845,8 +873,8 @@ void MainWindow::cleanAfterSession(){
 }
 
 void MainWindow::navigateBack() {
-//TODO: Properly save the recording
-
+    ui->sessionPlot->graph()->data()->clear();
+    ui->sessionPlot->replot();
     int minRecordingTime = 5;
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
         //Save recording
