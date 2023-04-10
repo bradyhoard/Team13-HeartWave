@@ -64,10 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
     batteryTimer->start(5000);
 
 
-    //to increase the breath pacer time
-    connect(ui->breath_pacer_time,SIGNAL(valueChanged(int )),this,SLOT(breathPacerTimeValueChanged(int )));
-    //TODO: connect left and right buttons to the breath pacer settings menu
-
+    // connect left and right buttons to the breath pacer settings menu
+    connect(ui->leftButton,SIGNAL(pressed()),this,SLOT(breathPacerTimeValueIncrease()));
+    connect(ui->rightButton,SIGNAL(pressed()),this,SLOT(breathPacerTimeValueDecrease()));
     // device interface button connections
     connect(ui->upButton, SIGNAL(pressed()), this, SLOT(navigateUpMenu()));
     connect(ui->downButton, SIGNAL(pressed()), this, SLOT(navigateDownMenu()));
@@ -510,6 +509,7 @@ void MainWindow::lightenCoherenceLights(int colorIndex){
 
         QColor lighterColor = colors.at(0).lighter(450);
         colors.replace(0, lighterColor);
+        qInfo()<<"Beeb";
 
         QColor darkerColor;
 
@@ -529,6 +529,7 @@ void MainWindow::lightenCoherenceLights(int colorIndex){
     else if (colorIndex == 1  && blue != 255){
         QColor lighterColor = colors.at(1).lighter(450);
         colors.replace(1, lighterColor);
+        qInfo()<<"Beeb";
 
         QColor darkerColor;
 
@@ -548,6 +549,7 @@ void MainWindow::lightenCoherenceLights(int colorIndex){
     else if (colorIndex == 2 && green != 255){
         QColor lighterColor = colors.at(2).lighter(450);
         colors.replace(2, lighterColor);
+         qInfo()<<"Beeb";
 
         QColor darkerColor;
 
@@ -617,8 +619,8 @@ void MainWindow::changePowerStatus() {
     ui->powerOffView->setVisible(!powerStatus);
     ui->upButton->setEnabled(powerStatus);
     ui->downButton->setEnabled(powerStatus);
-    ui->leftButton->setEnabled(powerStatus);
-    ui->rightButton->setEnabled(powerStatus);
+    ui->leftButton->setEnabled(false);
+    ui->rightButton->setEnabled(false);
     ui->menuButton->setEnabled(powerStatus);
     ui->okButton->setEnabled(powerStatus);
     ui->backButton->setEnabled(powerStatus);
@@ -641,10 +643,11 @@ void MainWindow::initializeMainMenu(Menu* m) {
     Menu* viewHistory = new Menu("VIEW",{}, history);
     Menu* clearDevice = new Menu("RESET DEVICE", {"YES","NO"}, settings);
     Menu* challengeLvls = new Menu("CHALLENGE LEVEL", {"Beginner","Adept","Intermediate","Advanced"},settings);
-
+    Menu* breathPaser = new Menu("BREATH PACER",{},settings);
     history->addChildMenu(viewHistory);
     settings->addChildMenu(challengeLvls);
     settings->addChildMenu(clearDevice);
+    settings->addChildMenu(breathPaser);
 
 }
 
@@ -695,7 +698,8 @@ void MainWindow::navigateSubMenu() {
     // Prevent crash if ok button is selected in a specific session
     if (masterMenu->getName() == "SESSIONS") {
         return;
-    } //nav to graph
+    }
+    //nav to graph
     if (masterMenu->getName() == "VIEW") {
         //show the session graph corresponding to the index
         if(index % 2 == 0){ //even index is session show the graph
@@ -707,7 +711,7 @@ void MainWindow::navigateSubMenu() {
             allSessions.removeAt(index); //rem the button
             allSessions.removeAt(index-1); //rem the session string at the prev index
             device->removeSession(index/2); //remove the session physically from the device
-            navigateToMainMenu();
+             MainWindow::updateMenu("SESSIONS", allSessions);
             return;
         }
     }
@@ -718,6 +722,7 @@ void MainWindow::navigateSubMenu() {
         navigateBack();
         return;
     }
+
     //Logic for when reset device settings menu option is selected
     if(masterMenu->getName() == "RESET DEVICE"){
         if (masterMenu->getMenuItems()[index] == "YES") {
@@ -731,6 +736,23 @@ void MainWindow::navigateSubMenu() {
             navigateBack();
             return;
         }
+    }
+    //Logic for when the menu is the settings breath paser
+    if(masterMenu->get(index)->getName() == "BREATH PACER"){
+        breathPaserSetting.clear();
+        ui->leftButton->setEnabled(true);
+        ui->rightButton->setEnabled(true);
+
+        QString change = "Change Breath Pacer Time : ";
+        breathPaserSetting+= change;
+        breathPaserValue = QString::number(device->getBreathPacer());
+        QString space = " ";
+        breathPaserSetting+= space;
+        breathPaserSetting+= breathPaserValue;
+        masterMenu = masterMenu->get(index);
+        MainWindow::updateMenu("BREATH PACER", breathPaserSetting);
+
+        return;
     }
     //qInfo() << masterMenu->get(index)->getName();
     //If the menu is a parent and clicking on it should display more menus.
@@ -765,6 +787,7 @@ void MainWindow::navigateSubMenu() {
         MainWindow::updateMenu("SESSIONS", allSessions);
     }
 
+
 }
 //update the summary screen from the info collected at the end of the session
 void MainWindow::updateSummaryScreen(){
@@ -787,9 +810,14 @@ void MainWindow::updateSummaryScreen(){
 void MainWindow::updateMenu(const QString selectedMenuItem, const QStringList menuItems) {
 
     activeQListWidget->clear();
+
     activeQListWidget->addItems(menuItems);
+
     activeQListWidget->setCurrentRow(0);
+
     ui->menuLabel->setText(selectedMenuItem);
+
+
 }
 
 void MainWindow::beginSession(){
@@ -832,6 +860,9 @@ void MainWindow::navigateToMainMenu() {
     ui->sessionPlot->graph()->data()->clear();
     ui->sessionPlot->replot();
     ui->sessionPlot->setVisible(false);
+    ui->leftButton->setEnabled(false);
+    ui->rightButton->setEnabled(false);
+
     int minRecordingTime = 5;
     //in case of valid session save progress first before clean up
     if (currentTimerCount >= minRecordingTime && currentSession != NULL) {
@@ -902,10 +933,16 @@ void MainWindow::navigateBack() {
 
     if (masterMenu->getName() == "MAIN MENU") {
         activeQListWidget->setCurrentRow(0);
+        ui->leftButton->setEnabled(false);
+        ui->rightButton->setEnabled(false);
+
     }
     else {
         masterMenu = masterMenu->getParent();
         updateMenu(masterMenu->getName(), masterMenu->getMenuItems());
+        ui->leftButton->setEnabled(false);
+        ui->rightButton->setEnabled(false);
+
     }
 }
 //Save all the current session parameters to the device
@@ -924,11 +961,23 @@ void MainWindow::saveSessionData(){
     //set current session back to null
     currentSession = NULL;
 }
-//change the value of breath time
-void MainWindow::breathPacerTimeValueChanged(int arg1)
+//increse the value of breath time
+void MainWindow::breathPacerTimeValueIncrease()
 {
+    int timeValue = device->getBreathPacer()+1;
+    device->setBreathPacer(timeValue);
+    breathPaserSetting[2] = QString::number(device->getBreathPacer());
+    MainWindow::updateMenu("BREATH PACER", breathPaserSetting);
 
-    device->setBreathPacer(arg1);
+
+}
+//decrease the value of breath time
+void MainWindow::breathPacerTimeValueDecrease()
+{
+    int timeValue = device->getBreathPacer()-1;
+    device->setBreathPacer(timeValue);
+    breathPaserSetting[2] = QString::number(device->getBreathPacer());
+    MainWindow::updateMenu("BREATH PACER", breathPaserSetting);
 
 }
 // the breath ball going back and forth

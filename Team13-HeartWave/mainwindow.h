@@ -85,6 +85,8 @@ private:
 //    QVector<double> excellentCoherences;
 
     QStringList allSessions; //list to store all the current sessions as strings
+    QStringList breathPaserSetting; //list to store all the breath paser sting string
+    QString breathPaserValue; //variable to store breath paser value in string format
 
     void updateMenu(const QString, const QStringList);
     void initializeMainMenu(Menu*);
@@ -116,7 +118,8 @@ private slots:
     void navigateBack();
     void lowerBattery(Device*); //update the battery display on the screen based on the device battey status
     void applyToSkin();
-    void breathPacerTimeValueChanged(int arg1);
+    void breathPacerTimeValueIncrease();
+    void breathPacerTimeValueDecrease();
     void breathPacerMove(int value);
 
 };

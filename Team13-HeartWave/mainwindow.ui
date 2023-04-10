@@ -606,38 +606,6 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>270</y>
-      <width>218</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Change Breath Pacer Time :</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="breath_pacer_time">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>30</number>
-       </property>
-       <property name="value">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
       <y>310</y>
       <width>239</width>
       <height>27</height>
@@ -966,7 +934,6 @@ color: rgb(255, 255, 255);</string>
      </rect>
     </property>
    </widget>
-   <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>mainList</zorder>
