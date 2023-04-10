@@ -56,3 +56,9 @@ void Device::getSession(int index, Session** s){
     }
     *s = NULL;
 }
+
+void Device::removeSession(int index){
+   if(index >= 0 && index < sessions.length()){
+       sessions.remove(index);
+   }
+}

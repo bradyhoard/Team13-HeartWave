@@ -698,9 +698,18 @@ void MainWindow::navigateSubMenu() {
     } //nav to graph
     if (masterMenu->getName() == "VIEW") {
         //show the session graph corresponding to the index
-        showSessionGraph(index);
-        ui->menuLabel->setText("SESSION");
-        return;
+        if(index % 2 == 0){ //even index is session show the graph
+            showSessionGraph(index/2);
+            ui->menuLabel->setText("SESSION");
+            return;
+        } //odd indexes are the delete button for each session that are above said delete button
+        else{
+            allSessions.removeAt(index); //rem the button
+            allSessions.removeAt(index-1); //rem the session string at the prev index
+            device->removeSession(index/2); //remove the session physically from the device
+            navigateToMainMenu();
+            return;
+        }
     }
 
     //Logic for when the menu is the settings challenge menu
@@ -905,6 +914,8 @@ void MainWindow::saveSessionData(){
     //and the session object itself
     //add it to the list of string of current session to display in history
     allSessions += currentSession->toString();
+    QString deleteStr = "DELETE SESSION " + QString::number(std::ceil(allSessions.length() / 2.0));
+    allSessions += deleteStr;
 
     //save graph data
     extractGraph();
