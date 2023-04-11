@@ -10,22 +10,27 @@ class Session{
 public:
     Session(int challengeLevel, const QDateTime& date);
     ~Session();
+
+    QString toString();
     //getters
     int getSessionTime();
     double getAchievement();
     double getAvgScore();
-    int getChallengeLvl();
-    int getPTimeInLow();
-    int getPTimeInMed();
-    int getPTimeInHigh();
+    QString getChallengeLvl();
+    double getPTimeInLow();
+    double getPTimeInMed();
+    double getPTimeInHigh();
+    double getTotalScore();
+
     QDateTime getStartTime();
     //get graph
-    //get date
+    QVector<double> getXvector();
+    QVector<double> getYvector();
 
     //setters
     void setLength(int seconds);
     void setAchieved(int achievement);
-    void setScore(double avgScore);
+    void setScore(double score);
     void setPTimeInLow(int pLow);
     void setPTimeInMed(int pMed);
     void setPTimeInHigh(int pHigh);
@@ -33,14 +38,15 @@ public:
     void addPointX(double point);
     void addPointY(double point);
 
+
 private:
     int length; //in seconds
     double achievement;
-    double avgCoherenceScore;
+    double totalCoherenceScore;
     int challengeLvl;
-    int pTimeLow; //% time in low coherence
-    int pTimeMed; //% time in med coherence
-    int pTimeHigh; //% time in high coherence
+    double pTimeLow; //% time in low coherence
+    double pTimeMed; //% time in med coherence
+    double pTimeHigh; //% time in high coherence
     QVector<double> graphXvalues;
     QVector<double> graphYvalues;
     QDateTime startTime;

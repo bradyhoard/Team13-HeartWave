@@ -32,6 +32,10 @@ public:
     void resetSettings();
     void addSession(Session* s);
 
+    void getSession(int index, Session** s);
+
+    void removeSession(int index);
+
 private:
     int m_batteryLevel;
     QVector<Session*> sessions; //History of device pointers to all user sessions

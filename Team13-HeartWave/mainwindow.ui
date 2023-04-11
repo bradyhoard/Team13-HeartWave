@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>859</width>
+    <width>1041</width>
     <height>790</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -53,7 +59,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -89,7 +95,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -125,7 +131,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -161,7 +167,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -197,7 +203,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -233,7 +239,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -269,7 +275,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -305,7 +311,7 @@ border-radius: 20px;
 }
 
 QPushButton:pressed {
-	background-color: #ffd300;
+        background-color: #ffd300;
 }</string>
     </property>
     <property name="text">
@@ -372,7 +378,7 @@ border-radius: 15px;
 }
 
 QPushButton:pressed {
-	background-color: green;
+        background-color: green;
 }</string>
     </property>
     <property name="text">
@@ -398,7 +404,7 @@ QPushButton:pressed {
       <x>60</x>
       <y>190</y>
       <width>341</width>
-      <height>221</height>
+      <height>201</height>
      </rect>
     </property>
    </widget>
@@ -596,71 +602,101 @@ color: rgb(255, 255, 255);</string>
      </property>
     </widget>
    </widget>
-   <widget class="QComboBox" name="applyToHeartBox">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>570</y>
-      <width>91</width>
-      <height>25</height>
+      <x>450</x>
+      <y>310</y>
+      <width>239</width>
+      <height>27</height>
      </rect>
     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Change Coherence Level:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="coherenceVal_Box"/>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>570</y>
-      <width>101</width>
-      <height>31</height>
+      <x>450</x>
+      <y>350</y>
+      <width>176</width>
+      <height>27</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Apply to Heart</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Apply Sensor</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="applyToHeartBox"/>
+     </item>
+    </layout>
    </widget>
-   <widget class="QWidget" name="ballPacerPlaceHold" native="true">
+   <widget class="QWidget" name="ballPacerWidget" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>410</y>
+      <y>390</y>
       <width>341</width>
-      <height>81</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(52, 101, 164);
 color: rgb(255, 255, 255);</string>
     </property>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>10</y>
-       <width>231</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>BALL PACER PLACE HOLDER</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Breath Pacer</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="breath_pacer">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(238, 238, 236);
+color: rgb(138, 226, 52);
+color: rgb(255, 255, 255);
+selection-color: rgb(138, 226, 52);</string>
+       </property>
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="summaryWidget" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>410</y>
+      <y>390</y>
       <width>341</width>
-      <height>81</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -670,9 +706,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>101</width>
+       <x>0</x>
+       <y>20</y>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
@@ -691,8 +727,8 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>40</y>
+       <x>0</x>
+       <y>60</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -712,9 +748,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_13">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>10</y>
-       <width>71</width>
+       <x>180</x>
+       <y>70</y>
+       <width>81</width>
        <height>31</height>
       </rect>
      </property>
@@ -733,9 +769,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="avgCoherence_label">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>40</y>
-       <width>61</width>
+       <x>100</x>
+       <y>60</y>
+       <width>81</width>
        <height>31</height>
       </rect>
      </property>
@@ -754,9 +790,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="challengeLvl_label">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>10</y>
-       <width>41</width>
+       <x>80</x>
+       <y>20</y>
+       <width>101</width>
        <height>31</height>
       </rect>
      </property>
@@ -775,9 +811,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>180</x>
        <y>40</y>
-       <width>71</width>
+       <width>81</width>
        <height>31</height>
       </rect>
      </property>
@@ -796,7 +832,7 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_15">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>180</x>
        <y>10</y>
        <width>81</width>
        <height>31</height>
@@ -817,9 +853,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="pTimeLow_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>10</y>
-       <width>41</width>
+       <x>260</x>
+       <y>70</y>
+       <width>51</width>
        <height>31</height>
       </rect>
      </property>
@@ -838,9 +874,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="pTimeMed_label">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>260</x>
        <y>40</y>
-       <width>41</width>
+       <width>51</width>
        <height>31</height>
       </rect>
      </property>
@@ -859,9 +895,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="pTimeHigh_label">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>260</x>
        <y>10</y>
-       <width>41</width>
+       <width>51</width>
        <height>31</height>
       </rect>
      </property>
@@ -888,30 +924,18 @@ color: rgb(255, 255, 255);</string>
     <zorder>pTimeHigh_label</zorder>
     <zorder>label_15</zorder>
    </widget>
-   <widget class="QComboBox" name="coherenceVal_Box">
+   <widget class="QCustomPlot" name="sessionPlot" native="true">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>440</y>
-      <width>91</width>
-      <height>25</height>
+      <x>70</x>
+      <y>180</y>
+      <width>321</width>
+      <height>221</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>440</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Change Coherence Value:</string>
-    </property>
-   </widget>
-   <zorder>powerOffView</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
    <zorder>mainList</zorder>
    <zorder>upButton</zorder>
    <zorder>downButton</zorder>
@@ -923,22 +947,20 @@ color: rgb(255, 255, 255);</string>
    <zorder>powerButton</zorder>
    <zorder>chargeDevice</zorder>
    <zorder>batteryProgress</zorder>
-   <zorder>customPlot</zorder>
    <zorder>menuFrame</zorder>
    <zorder>parametersViewWidget</zorder>
-   <zorder>applyToHeartBox</zorder>
-   <zorder>label_4</zorder>
-   <zorder>ballPacerPlaceHold</zorder>
+   <zorder>ballPacerWidget</zorder>
+   <zorder>customPlot</zorder>
    <zorder>summaryWidget</zorder>
-   <zorder>coherenceVal_Box</zorder>
-   <zorder>label_6</zorder>
+   <zorder>sessionPlot</zorder>
+   <zorder>powerOffView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>859</width>
+     <width>1041</width>
      <height>22</height>
     </rect>
    </property>
