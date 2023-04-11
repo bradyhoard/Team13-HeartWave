@@ -589,9 +589,14 @@ void MainWindow::lowerBattery(Device *d)
     //turn the device off and recharge the battery to full
     else{
 
+        if(currentTimerCount != -1){ //session in progress
+                darkenCoherenceLights();
+                navigateToMainMenu(); //return user to main menu can't just log in back to the same session
+        }
         powerChange();
+        //save the session if the length of the session is longer than 5 seconds
         d->setFullCharge();
-         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
+        ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
     }
     ui->batteryProgress->setValue(d->getBatteryLevel());
 
