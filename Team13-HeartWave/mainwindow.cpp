@@ -570,18 +570,22 @@ void MainWindow::lightenCoherenceLights(int colorIndex){
 
 }
 
+//every 5 seconds lower the battery % by 1
 void MainWindow::lowerBattery(Device *d)
 {
     d->setBatteryLevel(d->getBatteryLevel() -1);
 
+    //if bettween 100 to 50 , the color of battery is  green
     if(d->getBatteryLevel() <= 100 && d->getBatteryLevel() >=50 ){
         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
     }
 
+    //if bettween 49 to 20 , the color of battery is  yellow
     else if(d->getBatteryLevel() <= 49 && d->getBatteryLevel() >= 20 ){
         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #C3DC23; }");
     }
 
+    //if bettween 19 to 1 , the color of battery is  red
     else if(d->getBatteryLevel() <= 19 && d->getBatteryLevel() >= 1 ){
         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #EB1419; }");
     }
@@ -589,12 +593,12 @@ void MainWindow::lowerBattery(Device *d)
     //turn the device off and recharge the battery to full
     else{
 
-        if(currentTimerCount != -1){ //session in progress
+        if(currentTimerCount != -1){ //session in progress and > 5 seconds
                 darkenCoherenceLights();
-                navigateToMainMenu(); //return user to main menu can't just log in back to the same session
+                navigateToMainMenu(); //return user to main menu can't just log in back to the same session , save the session
         }
+        //turn off device and charge battery while also changing color to green
         powerChange();
-        //save the session if the length of the session is longer than 5 seconds
         d->setFullCharge();
         ui->batteryProgress->setStyleSheet("QProgressBar::chunk { background-color: #1FE058; }");
     }
