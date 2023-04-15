@@ -35,8 +35,11 @@ READ THIS BEFORE BUILDING
  1. Make sure to run the command: sudo apt-get install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev  and see that the libraries are up to date or the graph feature will simply not work.
 
     1.1 Also consider adding more memory to the VM if building freezes or is really slow
+ 
+ 2. If you get a lot of build errors still then make clean and rebuild hopefully resolves.
 
- 2. Building the project takes around 1 minute on my VM due to the graph files size so give it some time.
+ 3. Building the project takes around 1 minute on my VM due to the graph files size so give it some time.
+ 
 
 
 
