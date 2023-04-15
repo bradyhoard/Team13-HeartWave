@@ -16,7 +16,11 @@ Maryam khalaf  | 101032990
   - Coherence Lights 
   
 - Saajid Aliyar
-  - 
+  - Main Use Case
+  - Use Case Diagram
+  - 3 Sequence Diagrams
+  - Traceability Matrix
+  - Textual Explanations
   
 - Ron Stuchevsky
   - 
