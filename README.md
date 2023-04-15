@@ -5,10 +5,10 @@ COMP3004
 Members of Group
 ---------------- 
 
-Braydon Hoard  | 101144599
-Saajid Aliyar  | 101153376
-Ron Stuchevsky | 101188412
-Maryam khalaf  | 101032990
+Braydon Hoard  101144599 | 
+Saajid Aliyar  101153376 | 
+Ron Stuchevsky 101188412 | 
+Maryam khalaf  101032990 | 
 
 
 - Braydon Hoard
