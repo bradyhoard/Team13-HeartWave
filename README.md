@@ -18,7 +18,7 @@ Maryam khalaf  | 101032990
 - Saajid Aliyar
   - Main Use Case
   - Use Case Diagram
-  - 3 Sequence Diagrams
+  - Sequence Diagrams
   - Traceability Matrix
   - Textual Explanations
   
