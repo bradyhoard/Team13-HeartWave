@@ -23,7 +23,9 @@ Maryam khalaf  101032990 |
   - Textual Explanations
   
 - Ron Stuchevsky
-  - 
+  - Code (structure, graph, menu, history, settings etc.)
+  - Helped with UML, sequence diagrams
+  - Helped with Traceability Matrix
   
 - Maryam khalaf
   - 
