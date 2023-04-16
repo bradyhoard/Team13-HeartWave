@@ -436,7 +436,6 @@ void MainWindow::runSessionSim(){
         ui->coherenceLabel->setText(coherenceScore);
         ui->achievmentLabel->setText(achievmentScore);
     }
-
 }
 
 //Extracts all the points X (keys) and Y (values) from the graph and saves them
@@ -592,7 +591,6 @@ void MainWindow::lowerBattery(Device *d)
 
     //turn the device off and recharge the battery to full
     else{
-
         if(currentTimerCount != -1){ //session in progress and > 5 seconds
                 darkenCoherenceLights();
                 navigateToMainMenu(); //return user to main menu can't just log in back to the same session , save the session
@@ -703,9 +701,8 @@ void MainWindow::showSessionGraph(int index){
 void MainWindow::navigateSubMenu() {
     int index = activeQListWidget->currentRow();
     if (index < 0) return;
-
-    // Prevent crash if ok button is selected in a specific session
-    if (masterMenu->getName() == "SESSIONS") {
+    //prevent crash when clicking the OK button during sessions/breath pacer menu
+    if (masterMenu->getName() == "SESSIONS" || masterMenu->getName() == "BREATH PACER") {
         return;
     }
     //nav to graph
@@ -763,7 +760,6 @@ void MainWindow::navigateSubMenu() {
 
         return;
     }
-    //qInfo() << masterMenu->get(index)->getName();
     //If the menu is a parent and clicking on it should display more menus.
     if (masterMenu->get(index)->getMenuItems().length() > 0) {
         masterMenu = masterMenu->get(index);
@@ -777,13 +773,11 @@ void MainWindow::navigateSubMenu() {
         ui->summaryWidget->setVisible(true); //show extra summary info
         ui->ballPacerWidget->setVisible(false);//hide the breath paser
         //populate the summary screen
-
         int minRecordingTime = 5;
         if (currentTimerCount >= minRecordingTime) {
             //Save session here as well
             updateSummaryScreen();
             saveSessionData();
-
         }
         //Otherwise just stop the data feed and show summary view to user
         //Assumed: User will then use go back or menu button to return out of the session
@@ -893,13 +887,11 @@ void MainWindow::navigateToMainMenu() {
 
 //hide UI buttons and clean variables after the session is finished
 void MainWindow::cleanAfterSession(){
-    //TODO: account for ball pacer when it is implemented to update it properly
     graphTimer->start(1000); //restarts the timer
     graphTimer->stop(); //then stop it
     //stop the breath timer and reset the breath time to 10 seconds.
     breathTimer->start(1000);
     breathTimer->stop();
-    device->setBreathPacer(10);
 
     ui->customPlot->setVisible(false);
     ui->parametersViewWidget->setVisible(false);
