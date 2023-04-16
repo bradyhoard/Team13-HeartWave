@@ -28,7 +28,12 @@ Maryam khalaf  101032990 |
   - Helped with Traceability Matrix
   
 - Maryam khalaf
-  - 
+  - the breath pacer UI on screen (ball)
+  - UI left /right button functionality for the breath pacer setting
+  - Breath pacer setting
+  - Beeb when switching between diff lights
+  - use cases : UC2,UC3,UC4.
+
 
 Code and Files
 --------------
