@@ -23,8 +23,9 @@ Maryam khalaf  101032990 |
   - Textual Explanations
   
 - Ron Stuchevsky
-  - Code (structure, graph, menu, history, settings etc.)
-  - Helped with UML, sequence diagrams
+  - Code (structure, graph, menu logic, history, settings etc.)
+      (credit to DENAS team for providing the basic general Menu code and icons for it)
+  - Helped with UML, sequence diagrams, use cases
   - Helped with Traceability Matrix
   
 - Maryam khalaf
@@ -64,6 +65,13 @@ Interactable Elements
   - Apply Sensor
   - Change Coherence Level
   
+File Organization
+---------------------
+Team13-HeartWave folder - contains the code for the project
+Team13-HeartWave\resources - contains all the pictures used in the project
+docs folder - contain UML, sequence diagrams, use case diagram as well as a pdf with use cases and traceability matrix 
+Readme file
+
   
 Visual Representation
 ---------------------
