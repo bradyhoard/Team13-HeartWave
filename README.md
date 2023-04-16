@@ -67,10 +67,10 @@ Interactable Elements
   
 File Organization
 ---------------------
-Team13-HeartWave folder - contains the code for the project
-Team13-HeartWave\resources - contains all the pictures used in the project
-docs folder - contain UML, sequence diagrams, use case diagram as well as a pdf with use cases and traceability matrix 
-Readme file
+  - Team13-HeartWave folder - contains the code for the project
+  - Team13-HeartWave\resources - contains all the pictures used in the project
+  - docs folder - contain UML, sequence diagrams, use case diagram as well as a pdf with use cases and traceability matrix 
+  - Readme file
 
   
 Visual Representation
